@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Combine
+import Darwin
 
 class SystemMonitor: ObservableObject {
     @Published var fps: Int = 120
