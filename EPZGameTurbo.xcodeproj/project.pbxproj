@@ -19,14 +19,14 @@
 
 /* Begin PBXFileReference section */
 		110000002C79F00100000000 /* EPZGameTurbo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EPZGameTurbo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		110000012C79F00100000000 /* EPZGameTurboApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App/EPZGameTurboApp.swift; sourceTree = "<group>"; };
-		110000022C79F00100000000 /* LicenseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/LicenseManager.swift; sourceTree = "<group>"; };
-		110000032C79F00100000000 /* SuperTouchPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/SuperTouchPrefs.swift; sourceTree = "<group>"; };
-		110000042C79F00100000000 /* SystemMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/SystemMonitor.swift; sourceTree = "<group>"; };
-		110000052C79F00100000000 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/LicenseView.swift; sourceTree = "<group>"; };
-		110000062C79F00100000000 /* MainDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/MainDashboardView.swift; sourceTree = "<group>"; };
-		110000072C79F00100000000 /* FloatingOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/FloatingOverlayView.swift; sourceTree = "<group>"; };
-		110000082C79F00100000000 /* SensitivityOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/SensitivityOverlayView.swift; sourceTree = "<group>"; };
+		110000012C79F00100000000 /* EPZGameTurboApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPZGameTurboApp.swift; sourceTree = "<group>"; };
+		110000022C79F00100000000 /* LicenseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseManager.swift; sourceTree = "<group>"; };
+		110000032C79F00100000000 /* SuperTouchPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperTouchPrefs.swift; sourceTree = "<group>"; };
+		110000042C79F00100000000 /* SystemMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitor.swift; sourceTree = "<group>"; };
+		110000052C79F00100000000 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
+		110000062C79F00100000000 /* MainDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDashboardView.swift; sourceTree = "<group>"; };
+		110000072C79F00100000000 /* FloatingOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingOverlayView.swift; sourceTree = "<group>"; };
+		110000082C79F00100000000 /* SensitivityOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityOverlayView.swift; sourceTree = "<group>"; };
 		110000092C79F00100000000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Resources/Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
