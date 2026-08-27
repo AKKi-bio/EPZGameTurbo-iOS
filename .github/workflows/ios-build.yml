@@ -5,15 +5,20 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-ios:
-    runs-on: macos-latest
+    runs-on: macos-14
+    timeout-minutes: 15
 
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Compile Unsigned App Binary with Module Name
+    - name: Compile Unsigned App Binary
       run: |
         mkdir -p build/Payload/EPZGameTurbo.app
         SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
