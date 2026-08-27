@@ -1,0 +1,235 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		110000012C79F00100000001 /* EPZGameTurboApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000012C79F00100000000 /* EPZGameTurboApp.swift */; };
+		110000022C79F00100000001 /* LicenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000022C79F00100000000 /* LicenseManager.swift */; };
+		110000032C79F00100000001 /* SuperTouchPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000032C79F00100000000 /* SuperTouchPrefs.swift */; };
+		110000042C79F00100000001 /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000042C79F00100000000 /* SystemMonitor.swift */; };
+		110000052C79F00100000001 /* LicenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000052C79F00100000000 /* LicenseView.swift */; };
+		110000062C79F00100000001 /* MainDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000062C79F00100000000 /* MainDashboardView.swift */; };
+		110000072C79F00100000001 /* FloatingOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000072C79F00100000000 /* FloatingOverlayView.swift */; };
+		110000082C79F00100000001 /* SensitivityOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110000082C79F00100000000 /* SensitivityOverlayView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		110000002C79F00100000000 /* EPZGameTurbo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EPZGameTurbo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		110000012C79F00100000000 /* EPZGameTurboApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPZGameTurboApp.swift; sourceTree = "<group>"; };
+		110000022C79F00100000000 /* LicenseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseManager.swift; sourceTree = "<group>"; };
+		110000032C79F00100000000 /* SuperTouchPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperTouchPrefs.swift; sourceTree = "<group>"; };
+		110000042C79F00100000000 /* SystemMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitor.swift; sourceTree = "<group>"; };
+		110000052C79F00100000000 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
+		110000062C79F00100000000 /* MainDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDashboardView.swift; sourceTree = "<group>"; };
+		110000072C79F00100000000 /* FloatingOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingOverlayView.swift; sourceTree = "<group>"; };
+		110000082C79F00100000000 /* SensitivityOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityOverlayView.swift; sourceTree = "<group>"; };
+		110000092C79F00100000000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1100000A2C79F00100000000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1100000B2C79F00100000000 = {
+			isa = PBXGroup;
+			children = (
+				1100000C2C79F00100000000 /* EPZGameTurbo */,
+				1100000D2C79F00100000000 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1100000C2C79F00100000000 /* EPZGameTurbo */ = {
+			isa = PBXGroup;
+			children = (
+				110000012C79F00100000000 /* EPZGameTurboApp.swift */,
+				110000022C79F00100000000 /* LicenseManager.swift */,
+				110000032C79F00100000000 /* SuperTouchPrefs.swift */,
+				110000042C79F00100000000 /* SystemMonitor.swift */,
+				110000052C79F00100000000 /* LicenseView.swift */,
+				110000062C79F00100000000 /* MainDashboardView.swift */,
+				110000072C79F00100000000 /* FloatingOverlayView.swift */,
+				110000082C79F00100000000 /* SensitivityOverlayView.swift */,
+				110000092C79F00100000000 /* Info.plist */,
+			);
+			path = EPZGameTurbo;
+			sourceTree = "<group>";
+		};
+		1100000D2C79F00100000000 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				110000002C79F00100000000 /* EPZGameTurbo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1100000E2C79F00100000000 /* EPZGameTurbo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1100000F2C79F00100000000 /* Build configuration list for PBXNativeTarget "EPZGameTurbo" */;
+			buildPhases = (
+				110000102C79F00100000000 /* Sources */,
+				1100000A2C79F00100000000 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EPZGameTurbo;
+			productName = EPZGameTurbo;
+			productReference = 110000002C79F00100000000 /* EPZGameTurbo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		110000112C79F00100000000 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					1100000E2C79F00100000000 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 110000122C79F00100000000 /* Build configuration list for PBXProject "EPZGameTurbo" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1100000B2C79F00100000000;
+			productRefGroup = 1100000D2C79F00100000000;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1100000E2C79F00100000000 /* EPZGameTurbo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		110000102C79F00100000000 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				110000012C79F00100000001 /* EPZGameTurboApp.swift in Sources */,
+				110000022C79F00100000001 /* LicenseManager.swift in Sources */,
+				110000032C79F00100000001 /* SuperTouchPrefs.swift in Sources */,
+				110000042C79F00100000001 /* SystemMonitor.swift in Sources */,
+				110000052C79F00100000001 /* LicenseView.swift in Sources */,
+				110000062C79F00100000001 /* MainDashboardView.swift in Sources */,
+				110000072C79F00100000001 /* FloatingOverlayView.swift in Sources */,
+				110000082C79F00100000001 /* SensitivityOverlayView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		110000132C79F00100000000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CURRENT_PROJECT_VERSION = 99;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = EPZGameTurbo/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.82.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.epz.gameturbo.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		110000142C79F00100000000 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CURRENT_PROJECT_VERSION = 99;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = EPZGameTurbo/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.82.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.epz.gameturbo.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		110000152C79F00100000000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		110000162C79F00100000000 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1100000F2C79F00100000000 /* Build configuration list for PBXNativeTarget "EPZGameTurbo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				110000132C79F00100000000 /* Debug */,
+				110000142C79F00100000000 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		110000122C79F00100000000 /* Build configuration list for PBXProject "EPZGameTurbo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				110000152C79F00100000000 /* Debug */,
+				110000162C79F00100000000 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 110000112C79F00100000000 /* Project object */;
+}
