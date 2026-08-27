@@ -48,8 +48,8 @@ struct SensitivityOverlayView: View {
                     }
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .yellow))
-                .onChange(of: isSuperTouchEnabled) { val in
-                    SuperTouchPrefs.isEnabled = val
+                .onChange(of: isSuperTouchEnabled) { newValue in
+                    SuperTouchPrefs.isEnabled = newValue
                 }
                 .padding(.horizontal)
                 

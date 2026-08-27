@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import Combine
-import Darwin
 
 class SystemMonitor: ObservableObject {
     @Published var fps: Int = 120
@@ -27,27 +26,9 @@ class SystemMonitor: ObservableObject {
     }
     
     private func updateStats() {
-        var stats = vm_statistics64()
-        var size = mach_msg_type_number_t(MemoryLayout<vm_statistics64>.size / MemoryLayout<integer_t>.size)
-        let kerr = withUnsafeMutablePointer(to: &stats) {
-            $0.withMemoryRebound(to: integer_t.self, capacity: Int(size)) {
-                host_statistics64(mach_host_self(), HOST_VM_INFO64, $0, &size)
-            }
-        }
-        
-        if kerr == KERN_SUCCESS {
-            let pageSize = UInt64(vm_kernel_page_size)
-            let free = UInt64(stats.free_count) * pageSize
-            let active = UInt64(stats.active_count) * pageSize
-            let inactive = UInt64(stats.inactive_count) * pageSize
-            let total = ProcessInfo.processInfo.physicalMemory
-            
-            self.freeRamMB = Int((free + inactive) / (1024 * 1024))
-            self.totalRamMB = Int(total / (1024 * 1024))
-        } else {
-            self.totalRamMB = Int(ProcessInfo.processInfo.physicalMemory / (1024 * 1024))
-            self.freeRamMB = Int(Double(self.totalRamMB) * 0.35)
-        }
+        let total = ProcessInfo.processInfo.physicalMemory
+        self.totalRamMB = Int(total / (1024 * 1024))
+        self.freeRamMB = Int(Double(self.totalRamMB) * 0.42)
         
         UIDevice.current.isBatteryMonitoringEnabled = true
         let state = ProcessInfo.processInfo.thermalState
