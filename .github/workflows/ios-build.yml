@@ -5,26 +5,22 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-concurrency:
-  group: ios-build-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build-ios:
     runs-on: macos-14
-    timeout-minutes: 15
 
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Compile Unsigned App Binary
+    - name: Compile Real Unsigned ARM64 iOS Binary
       run: |
         mkdir -p build/Payload/EPZGameTurbo.app
-        SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+        SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
+        echo "iPhoneOS SDK: $SDK_PATH"
         
-        swiftc -sdk "$SDK_PATH" \
-               -target arm64-apple-ios15.0-simulator \
+        swiftc -v -sdk "$SDK_PATH" \
+               -target arm64-apple-ios15.0 \
                -module-name EPZGameTurbo \
                -parse-as-library \
                EPZGameTurbo/EPZGameTurboApp.swift \
