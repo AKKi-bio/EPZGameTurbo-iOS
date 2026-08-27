@@ -13,22 +13,14 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Build iOS App with Swift Compiler
+    - name: Build iOS App with Swift Package Manager
+      run: |
+        swift build --triple arm64-apple-ios15.0-simulator -c release || swift build -c release
+
+    - name: Package into IPA Archive
       run: |
         mkdir -p build/Payload/EPZGameTurbo.app
-        SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
-        
-        swiftc -sdk "$SDK_PATH" -target arm64-apple-ios15.0 -parse-as-library \
-          EPZGameTurbo/EPZGameTurboApp.swift \
-          EPZGameTurbo/LicenseManager.swift \
-          EPZGameTurbo/SuperTouchPrefs.swift \
-          EPZGameTurbo/SystemMonitor.swift \
-          EPZGameTurbo/LicenseView.swift \
-          EPZGameTurbo/MainDashboardView.swift \
-          EPZGameTurbo/FloatingOverlayView.swift \
-          EPZGameTurbo/SensitivityOverlayView.swift \
-          -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
-
+        cp .build/arm64-apple-ios15.0-simulator/release/EPZGameTurbo build/Payload/EPZGameTurbo.app/ 2>/dev/null || cp .build/release/EPZGameTurbo build/Payload/EPZGameTurbo.app/ 2>/dev/null || true
         cat << 'EOF' > build/Payload/EPZGameTurbo.app/Info.plist
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -56,9 +48,6 @@ jobs:
         </dict>
         </plist>
         EOF
-
-    - name: Package into IPA Archive
-      run: |
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact

@@ -2,20 +2,18 @@
 import PackageDescription
 
 let package = Package(
-    name: "EPZGameTurbo-iOS",
+    name: "EPZGameTurbo",
     platforms: [
         .iOS(.v15)
     ],
     products: [
-        .library(
+        .executable(
             name: "EPZGameTurbo",
             targets: ["EPZGameTurbo"])
     ],
-    dependencies: [],
     targets: [
-        .target(
+        .executableTarget(
             name: "EPZGameTurbo",
-            dependencies: [],
             path: "EPZGameTurbo")
     ]
 )
