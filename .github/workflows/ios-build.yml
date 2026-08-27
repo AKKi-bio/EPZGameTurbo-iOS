@@ -13,20 +13,27 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Install XcodeGen
-      run: brew install xcodegen
-
-    - name: Generate Xcode Project
-      run: xcodegen generate
-
-    - name: Build iOS App Archive
+    - name: Compile iOS Binary via Apple Swift Compiler
       run: |
-        xcodebuild -project EPZGameTurbo.xcodeproj -scheme EPZGameTurbo -sdk iphoneos -configuration Release -archivePath build/EPZGameTurbo.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+        mkdir -p build/Payload/EPZGameTurbo.app
+        
+        # Compile all Swift files into ARM64 iOS executable
+        xcrun -sdk iphoneos swiftc -target arm64-apple-ios15.0 -parse-as-library \
+          EPZGameTurbo/App/EPZGameTurboApp.swift \
+          EPZGameTurbo/Models/LicenseManager.swift \
+          EPZGameTurbo/Models/SuperTouchPrefs.swift \
+          EPZGameTurbo/Models/SystemMonitor.swift \
+          EPZGameTurbo/Views/LicenseView.swift \
+          EPZGameTurbo/Views/MainDashboardView.swift \
+          EPZGameTurbo/Views/FloatingOverlayView.swift \
+          EPZGameTurbo/Views/SensitivityOverlayView.swift \
+          -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
 
-    - name: Create Unsigned IPA Package
+        # Copy Info.plist into app bundle
+        cp EPZGameTurbo/Resources/Info.plist build/Payload/EPZGameTurbo.app/
+
+    - name: Package into IPA Archive
       run: |
-        mkdir -p build/Payload
-        cp -r build/EPZGameTurbo.xcarchive/Products/Applications/*.app build/Payload/
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
