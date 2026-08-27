@@ -13,16 +13,15 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Compile Unsigned App Binary with Full Diagnostics
+    - name: Compile Unsigned App Binary with Module Name
       run: |
         mkdir -p build/Payload/EPZGameTurbo.app
         SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
-        echo "SDK Path: $SDK_PATH"
         
-        swiftc -v -sdk "$SDK_PATH" \
+        swiftc -sdk "$SDK_PATH" \
                -target arm64-apple-ios15.0-simulator \
+               -module-name EPZGameTurbo \
                -parse-as-library \
-               -L "$SDK_PATH/usr/lib/swift" \
                EPZGameTurbo/EPZGameTurboApp.swift \
                EPZGameTurbo/LicenseManager.swift \
                EPZGameTurbo/SuperTouchPrefs.swift \
@@ -31,23 +30,7 @@ jobs:
                EPZGameTurbo/MainDashboardView.swift \
                EPZGameTurbo/FloatingOverlayView.swift \
                EPZGameTurbo/SensitivityOverlayView.swift \
-               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo || true
-
-        if [ ! -f "build/Payload/EPZGameTurbo.app/EPZGameTurbo" ]; then
-          echo "Fallback: Compiling without -parse-as-library..."
-          swiftc -v -sdk "$SDK_PATH" \
-                 -target arm64-apple-ios15.0-simulator \
-                 -L "$SDK_PATH/usr/lib/swift" \
-                 EPZGameTurbo/EPZGameTurboApp.swift \
-                 EPZGameTurbo/LicenseManager.swift \
-                 EPZGameTurbo/SuperTouchPrefs.swift \
-                 EPZGameTurbo/SystemMonitor.swift \
-                 EPZGameTurbo/LicenseView.swift \
-                 EPZGameTurbo/MainDashboardView.swift \
-                 EPZGameTurbo/FloatingOverlayView.swift \
-                 EPZGameTurbo/SensitivityOverlayView.swift \
-                 -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
-        fi
+               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
 
         cat << 'EOF' > build/Payload/EPZGameTurbo.app/Info.plist
         <?xml version="1.0" encoding="UTF-8"?>
