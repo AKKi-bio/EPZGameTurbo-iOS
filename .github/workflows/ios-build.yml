@@ -13,14 +13,17 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Build Swift Package for iOS Simulator
-      run: |
-        swift build --sdk $(xcrun --sdk iphonesimulator --show-sdk-path) -Xswiftc -target -Xswiftc arm64-apple-ios15.0-simulator
-
-    - name: Package into IPA Archive
+    - name: Compile Unsigned App Binary
       run: |
         mkdir -p build/Payload/EPZGameTurbo.app
-        cp -r .build/arm64-apple-ios15.0-simulator/debug/* build/Payload/EPZGameTurbo.app/ 2>/dev/null || cp -r .build/debug/* build/Payload/EPZGameTurbo.app/ 2>/dev/null || true
+        SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+        
+        swiftc -sdk "$SDK_PATH" \
+               -target arm64-apple-ios15.0-simulator \
+               -parse-as-library \
+               EPZGameTurbo/*.swift \
+               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
+
         cat << 'EOF' > build/Payload/EPZGameTurbo.app/Info.plist
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -48,6 +51,9 @@ jobs:
         </dict>
         </plist>
         EOF
+
+    - name: Package into IPA Archive
+      run: |
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
