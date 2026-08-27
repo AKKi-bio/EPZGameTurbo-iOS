@@ -7,33 +7,28 @@ on:
 
 jobs:
   build-ios:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Compile iOS Binary via Apple Swift Compiler
+    - name: Build iOS App Binary
       run: |
-        mkdir -p build/Payload/EPZGameTurbo.app
-        
-        # Compile all Swift files into ARM64 iOS executable
-        xcrun -sdk iphoneos swiftc -target arm64-apple-ios15.0 -parse-as-library \
-          EPZGameTurbo/App/EPZGameTurboApp.swift \
-          EPZGameTurbo/Models/LicenseManager.swift \
-          EPZGameTurbo/Models/SuperTouchPrefs.swift \
-          EPZGameTurbo/Models/SystemMonitor.swift \
-          EPZGameTurbo/Views/LicenseView.swift \
-          EPZGameTurbo/Views/MainDashboardView.swift \
-          EPZGameTurbo/Views/FloatingOverlayView.swift \
-          EPZGameTurbo/Views/SensitivityOverlayView.swift \
-          -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
-
-        # Copy Info.plist into app bundle
-        cp EPZGameTurbo/Resources/Info.plist build/Payload/EPZGameTurbo.app/
+        xcodebuild -project EPZGameTurbo.xcodeproj \
+                   -scheme EPZGameTurbo \
+                   -sdk iphoneos \
+                   -configuration Release \
+                   -derivedDataPath build/ \
+                   CODE_SIGNING_ALLOWED=NO \
+                   CODE_SIGN_IDENTITY="" \
+                   CODE_SIGNING_REQUIRED=NO \
+                   clean build
 
     - name: Package into IPA Archive
       run: |
+        mkdir -p build/Payload
+        cp -r build/Build/Products/Release-iphoneos/EPZGameTurbo.app build/Payload/
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
