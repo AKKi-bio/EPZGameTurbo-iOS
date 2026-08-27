@@ -13,22 +13,58 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Build iOS App with Xcode
+    - name: Compile iOS App Binary
       run: |
-        xcodebuild -project EPZGameTurbo.xcodeproj \
-                   -scheme EPZGameTurbo \
-                   -destination 'generic/platform=iOS Simulator' \
-                   -configuration Release \
-                   -derivedDataPath build/ \
-                   CODE_SIGNING_ALLOWED=NO \
-                   CODE_SIGN_IDENTITY="" \
-                   CODE_SIGNING_REQUIRED=NO \
-                   clean build
+        mkdir -p build/Payload/EPZGameTurbo.app
+        
+        # Get iOS Simulator SDK Path
+        SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+        
+        # Compile all Swift source files directly
+        swiftc -sdk "$SDK_PATH" \
+               -target arm64-apple-ios15.0-simulator \
+               -parse-as-library \
+               EPZGameTurbo/EPZGameTurboApp.swift \
+               EPZGameTurbo/LicenseManager.swift \
+               EPZGameTurbo/SuperTouchPrefs.swift \
+               EPZGameTurbo/SystemMonitor.swift \
+               EPZGameTurbo/LicenseView.swift \
+               EPZGameTurbo/MainDashboardView.swift \
+               EPZGameTurbo/FloatingOverlayView.swift \
+               EPZGameTurbo/SensitivityOverlayView.swift \
+               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
+
+        # Write Info.plist
+        cat << 'EOF' > build/Payload/EPZGameTurbo.app/Info.plist
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>CFBundleExecutable</key>
+            <string>EPZGameTurbo</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.epz.gameturbo.ios</string>
+            <key>CFBundleName</key>
+            <string>EPZ Game Turbo</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>1.82.0</string>
+            <key>CFBundleVersion</key>
+            <string>99</string>
+            <key>LSRequiresIPhoneOS</key>
+            <true/>
+            <key>NSAppTransportSecurity</key>
+            <dict>
+                <key>NSAllowsArbitraryLoads</key>
+                <true/>
+            </dict>
+        </dict>
+        </plist>
+        EOF
 
     - name: Package into IPA Archive
       run: |
-        mkdir -p build/Payload
-        cp -r build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app build/Payload/
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
