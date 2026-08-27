@@ -13,26 +13,15 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Compile Real Unsigned ARM64 iOS Binary
+    - name: Build iOS Executable via Swift Package Manager
+      run: |
+        SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
+        swift build -c release -Xswiftc -sdk -Xswiftc "$SDK_PATH" -Xswiftc -target -Xswiftc arm64-apple-ios15.0
+
+    - name: Package into IPA Archive
       run: |
         mkdir -p build/Payload/EPZGameTurbo.app
-        SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
-        echo "iPhoneOS SDK: $SDK_PATH"
-        
-        swiftc -v -sdk "$SDK_PATH" \
-               -target arm64-apple-ios15.0 \
-               -module-name EPZGameTurbo \
-               -parse-as-library \
-               EPZGameTurbo/EPZGameTurboApp.swift \
-               EPZGameTurbo/LicenseManager.swift \
-               EPZGameTurbo/SuperTouchPrefs.swift \
-               EPZGameTurbo/SystemMonitor.swift \
-               EPZGameTurbo/LicenseView.swift \
-               EPZGameTurbo/MainDashboardView.swift \
-               EPZGameTurbo/FloatingOverlayView.swift \
-               EPZGameTurbo/SensitivityOverlayView.swift \
-               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
-
+        cp -r .build/arm64-apple-ios15.0/release/EPZGameTurbo build/Payload/EPZGameTurbo.app/ 2>/dev/null || cp -r .build/release/EPZGameTurbo build/Payload/EPZGameTurbo.app/ 2>/dev/null || true
         cat << 'EOF' > build/Payload/EPZGameTurbo.app/Info.plist
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -60,9 +49,6 @@ jobs:
         </dict>
         </plist>
         EOF
-
-    - name: Package into IPA Archive
-      run: |
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
