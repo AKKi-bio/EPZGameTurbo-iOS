@@ -13,22 +13,22 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Build iOS App Binary
+    - name: Build iOS App Archive
       run: |
         xcodebuild -project EPZGameTurbo.xcodeproj \
                    -scheme EPZGameTurbo \
-                   -sdk iphoneos \
+                   -destination 'generic/platform=iOS' \
                    -configuration Release \
-                   -derivedDataPath build/ \
+                   -archivePath build/EPZGameTurbo.xcarchive \
                    CODE_SIGNING_ALLOWED=NO \
                    CODE_SIGN_IDENTITY="" \
                    CODE_SIGNING_REQUIRED=NO \
-                   clean build
+                   archive
 
-    - name: Package into IPA Archive
+    - name: Create Unsigned IPA Package
       run: |
         mkdir -p build/Payload
-        cp -r build/Build/Products/Release-iphoneos/EPZGameTurbo.app build/Payload/
+        cp -r build/EPZGameTurbo.xcarchive/Products/Applications/*.app build/Payload/
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
