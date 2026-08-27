@@ -17,11 +17,12 @@ jobs:
       run: |
         mkdir -p build/Payload/EPZGameTurbo.app
         SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+        SWIFT_FILES=$(find EPZGameTurbo -name "*.swift")
         
         swiftc -sdk "$SDK_PATH" \
                -target arm64-apple-ios15.0-simulator \
                -parse-as-library \
-               EPZGameTurbo/*.swift \
+               $SWIFT_FILES \
                -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
 
         cat << 'EOF' > build/Payload/EPZGameTurbo.app/Info.plist
