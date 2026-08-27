@@ -7,9 +7,10 @@ targets:
   EPZGameTurbo:
     type: application
     platform: iOS
-    sources: [EPZGameTurbo]
+    sources:
+      - path: EPZGameTurbo
     settings:
       CODE_SIGNING_ALLOWED: NO
-      CODE_SIGN_IDENTITY: ""
       CODE_SIGNING_REQUIRED: NO
-      INFOPLIST_FILE: EPZGameTurbo/Resources/Info.plist
+      CODE_SIGN_IDENTITY: ""
+      DEVELOPMENT_TEAM: ""
