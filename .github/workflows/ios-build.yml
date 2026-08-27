@@ -19,6 +19,7 @@ jobs:
         SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
         
         swiftc -sdk "$SDK_PATH" \
+               -F "$SDK_PATH/System/Library/Frameworks" \
                -target arm64-apple-ios15.0-simulator \
                -parse-as-library \
                EPZGameTurbo/EPZGameTurboApp.swift \
