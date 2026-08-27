@@ -13,22 +13,27 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
+    - name: Inspect Xcode Project Schemes
+      run: xcodebuild -project EPZGameTurbo.xcodeproj -list
+
     - name: Build iOS App Bundle
       run: |
         xcodebuild -project EPZGameTurbo.xcodeproj \
                    -scheme EPZGameTurbo \
-                   -sdk iphonesimulator \
+                   -sdk iphoneos \
                    -configuration Release \
                    -derivedDataPath build/ \
                    CODE_SIGNING_ALLOWED=NO \
-                   CODE_SIGN_IDENTITY="" \
                    CODE_SIGNING_REQUIRED=NO \
+                   CODE_SIGN_IDENTITY="" \
+                   AD_HOC_CODE_SIGNING_ALLOWED=YES \
+                   COMPILER_INDEX_STORE_ENABLE=NO \
                    build
 
     - name: Package into IPA Archive
       run: |
         mkdir -p build/Payload
-        cp -r build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app build/Payload/
+        cp -r build/Build/Products/Release-iphoneos/EPZGameTurbo.app build/Payload/
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
