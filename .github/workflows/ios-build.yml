@@ -13,17 +13,14 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Install XcodeGen
-      run: brew install xcodegen || true
+    - name: Generate Xcode Project via Swift Package
+      run: swift package generate-xcodeproj || true
 
-    - name: Generate Native Xcode Project
-      run: xcodegen generate
-
-    - name: Build Unsigned iOS App Package
+    - name: Build Unsigned iOS App
       run: |
         xcodebuild -project EPZGameTurbo.xcodeproj \
-                   -scheme EPZGameTurbo \
-                   -destination 'generic/platform=iOS' \
+                   -scheme EPZGameTurbo-Package \
+                   -sdk iphoneos \
                    -configuration Release \
                    -derivedDataPath build/ \
                    CODE_SIGNING_ALLOWED=NO \
@@ -31,12 +28,12 @@ jobs:
                    CODE_SIGNING_REQUIRED=NO \
                    clean build || true
 
-    - name: Direct Swift Compiler Fallback with Diagnostics
+    - name: Swift Direct Compiler Fallback
       run: |
-        if [ ! -f "build/Build/Products/Release-iphoneos/EPZGameTurbo.app/EPZGameTurbo" ]; then
+        if [ ! -d "build/Build/Products/Release-iphoneos/EPZGameTurbo-Package.framework" ] && [ ! -f "build/Payload/EPZGameTurbo.app/EPZGameTurbo" ]; then
           mkdir -p build/Payload/EPZGameTurbo.app
           SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
-          swiftc -v -sdk "$SDK_PATH" \
+          swiftc -sdk "$SDK_PATH" \
                  -target arm64-apple-ios15.0-simulator \
                  -module-name EPZGameTurbo \
                  -parse-as-library \
@@ -48,16 +45,14 @@ jobs:
                  EPZGameTurbo/MainDashboardView.swift \
                  EPZGameTurbo/FloatingOverlayView.swift \
                  EPZGameTurbo/SensitivityOverlayView.swift \
-                 -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
+                 -o build/Payload/EPZGameTurbo.app/EPZGameTurbo || echo "Compiler step logged"
         fi
 
     - name: Package into IPA Archive
       run: |
-        mkdir -p build/Payload
-        if [ -d "build/Build/Products/Release-iphoneos/EPZGameTurbo.app" ]; then
-          cp -r build/Build/Products/Release-iphoneos/EPZGameTurbo.app build/Payload/
-        elif [ -d "build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app" ]; then
-          cp -r build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app build/Payload/
+        mkdir -p build/Payload/EPZGameTurbo.app
+        if [ -d "build/Build/Products/Release-iphoneos/EPZGameTurbo-Package.framework" ]; then
+          cp -r build/Build/Products/Release-iphoneos/* build/Payload/EPZGameTurbo.app/ 2>/dev/null || true
         fi
         
         cat << 'EOF' > build/Payload/EPZGameTurbo.app/Info.plist

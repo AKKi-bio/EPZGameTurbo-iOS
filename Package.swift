@@ -7,12 +7,12 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .executable(
+        .library(
             name: "EPZGameTurbo",
             targets: ["EPZGameTurbo"])
     ],
     targets: [
-        .executableTarget(
+        .target(
             name: "EPZGameTurbo",
             path: "EPZGameTurbo")
     ]
