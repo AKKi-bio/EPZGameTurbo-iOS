@@ -13,25 +13,53 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Compile Unsigned App Binary
-      run: |
-        mkdir -p build/Payload/EPZGameTurbo.app
-        SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
-        
-        swiftc -sdk "$SDK_PATH" \
-               -target arm64-apple-ios15.0-simulator \
-               -module-name EPZGameTurbo \
-               -parse-as-library \
-               EPZGameTurbo/EPZGameTurboApp.swift \
-               EPZGameTurbo/LicenseManager.swift \
-               EPZGameTurbo/SuperTouchPrefs.swift \
-               EPZGameTurbo/SystemMonitor.swift \
-               EPZGameTurbo/LicenseView.swift \
-               EPZGameTurbo/MainDashboardView.swift \
-               EPZGameTurbo/FloatingOverlayView.swift \
-               EPZGameTurbo/SensitivityOverlayView.swift \
-               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
+    - name: Install XcodeGen
+      run: brew install xcodegen || true
 
+    - name: Generate Native Xcode Project
+      run: xcodegen generate
+
+    - name: Build Unsigned iOS App Package
+      run: |
+        xcodebuild -project EPZGameTurbo.xcodeproj \
+                   -scheme EPZGameTurbo \
+                   -destination 'generic/platform=iOS' \
+                   -configuration Release \
+                   -derivedDataPath build/ \
+                   CODE_SIGNING_ALLOWED=NO \
+                   CODE_SIGN_IDENTITY="" \
+                   CODE_SIGNING_REQUIRED=NO \
+                   clean build || true
+
+    - name: Direct Swift Compiler Fallback with Diagnostics
+      run: |
+        if [ ! -f "build/Build/Products/Release-iphoneos/EPZGameTurbo.app/EPZGameTurbo" ]; then
+          mkdir -p build/Payload/EPZGameTurbo.app
+          SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+          swiftc -v -sdk "$SDK_PATH" \
+                 -target arm64-apple-ios15.0-simulator \
+                 -module-name EPZGameTurbo \
+                 -parse-as-library \
+                 EPZGameTurbo/EPZGameTurboApp.swift \
+                 EPZGameTurbo/LicenseManager.swift \
+                 EPZGameTurbo/SuperTouchPrefs.swift \
+                 EPZGameTurbo/SystemMonitor.swift \
+                 EPZGameTurbo/LicenseView.swift \
+                 EPZGameTurbo/MainDashboardView.swift \
+                 EPZGameTurbo/FloatingOverlayView.swift \
+                 EPZGameTurbo/SensitivityOverlayView.swift \
+                 -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
+        fi
+
+    - name: Package into IPA Archive
+      run: |
+        mkdir -p build/Payload
+        if [ -d "build/Build/Products/Release-iphoneos/EPZGameTurbo.app" ]; then
+          cp -r build/Build/Products/Release-iphoneos/EPZGameTurbo.app build/Payload/
+        elif [ -d "build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app" ]; then
+          cp -r build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app build/Payload/
+        fi
+        
         cat << 'EOF' > build/Payload/EPZGameTurbo.app/Info.plist
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -59,9 +87,7 @@ jobs:
         </dict>
         </plist>
         EOF
-
-    - name: Package into IPA Archive
-      run: |
+        
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
