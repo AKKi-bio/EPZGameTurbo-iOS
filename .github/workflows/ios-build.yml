@@ -13,16 +13,12 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Install XcodeGen & Generate Xcode Project
-      run: |
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-        xcodegen generate
-
     - name: Build Unsigned App Package with Xcode
       run: |
         xcodebuild -project EPZGameTurbo.xcodeproj \
                    -scheme EPZGameTurbo \
                    -sdk iphonesimulator \
+                   -destination 'generic/platform=iOS Simulator' \
                    -configuration Release \
                    -derivedDataPath build/ \
                    CODE_SIGNING_ALLOWED=NO \
