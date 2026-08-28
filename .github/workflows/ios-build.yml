@@ -13,24 +13,30 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Build Unsigned App Package with Xcode
+    - name: Compile Native iOS Binary & Package IPA
       run: |
-        xcodebuild -project EPZGameTurbo.xcodeproj \
-                   -scheme EPZGameTurbo \
-                   -sdk iphonesimulator \
-                   -destination 'generic/platform=iOS Simulator' \
-                   -configuration Release \
-                   -derivedDataPath build/ \
-                   CODE_SIGNING_ALLOWED=NO \
-                   CODE_SIGNING_REQUIRED=NO \
-                   CODE_SIGN_IDENTITY="" \
-                   AD_HOC_CODE_SIGNING_ALLOWED=YES \
-                   build
+        mkdir -p build/Payload/EPZGameTurbo.app
+        
+        SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+        echo "Using Simulator SDK: $SDK_PATH"
 
-    - name: Package into IPA Archive
-      run: |
-        mkdir -p build/Payload
-        cp -r build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app build/Payload/
+        swiftc -sdk "$SDK_PATH" \
+               -target arm64-apple-ios15.0-simulator \
+               -module-name EPZGameTurbo \
+               -emit-executable \
+               EPZGameTurbo/EPZGameTurboApp.swift \
+               EPZGameTurbo/LicenseManager.swift \
+               EPZGameTurbo/SuperTouchPrefs.swift \
+               EPZGameTurbo/SystemMonitor.swift \
+               EPZGameTurbo/LicenseView.swift \
+               EPZGameTurbo/MainDashboardView.swift \
+               EPZGameTurbo/FloatingOverlayView.swift \
+               EPZGameTurbo/SensitivityOverlayView.swift \
+               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
+
+        cp EPZGameTurbo/Info.plist build/Payload/EPZGameTurbo.app/Info.plist
+        chmod +x build/Payload/EPZGameTurbo.app/EPZGameTurbo
+
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
         echo "Final IPA File Size: $(ls -lh EPZGameTurbo-iOS.ipa)"
 
