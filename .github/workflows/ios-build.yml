@@ -13,6 +13,12 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
+    - name: Download & Run XcodeGen
+      run: |
+        curl -sL https://github.com/yonaskolb/XcodeGen/releases/download/2.38.0/xcodegen.zip -o xcodegen.zip
+        unzip -q xcodegen.zip
+        ./xcodegen/bin/xcodegen generate
+
     - name: Build Unsigned App Package with Xcode
       run: |
         xcodebuild -project EPZGameTurbo.xcodeproj \
@@ -24,21 +30,12 @@ jobs:
                    CODE_SIGNING_REQUIRED=NO \
                    CODE_SIGN_IDENTITY="" \
                    AD_HOC_CODE_SIGNING_ALLOWED=YES \
-                   build 2>&1 | tee build_log.txt || true
-        
-        echo "=== BUILD LOG TAIL ==="
-        tail -n 100 build_log.txt
+                   build
 
     - name: Package into IPA Archive
       run: |
         mkdir -p build/Payload
-        APP_PATH=$(find build/ -name "*.app" | head -n 1)
-        echo "Found compiled App at: $APP_PATH"
-        
-        if [ -n "$APP_PATH" ]; then
-          cp -r "$APP_PATH" build/Payload/
-        fi
-
+        cp -r build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app build/Payload/
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
         echo "Final IPA File Size: $(ls -lh EPZGameTurbo-iOS.ipa)"
 
