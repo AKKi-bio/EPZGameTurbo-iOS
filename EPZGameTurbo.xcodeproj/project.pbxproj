@@ -5,6 +5,19 @@
 	};
 	objectVersion = 54;
 	objects = {
+
+/* Begin PBXBuildFile section */
+		2000001 /* EPZGameTurboApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000001 /* EPZGameTurboApp.swift */; };
+		2000002 /* LicenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000002 /* LicenseManager.swift */; };
+		2000003 /* SuperTouchPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000003 /* SuperTouchPrefs.swift */; };
+		2000004 /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000004 /* SystemMonitor.swift */; };
+		2000005 /* LicenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000005 /* LicenseView.swift */; };
+		2000006 /* MainDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000006 /* MainDashboardView.swift */; };
+		2000007 /* FloatingOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000007 /* FloatingOverlayView.swift */; };
+		2000008 /* SensitivityOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000008 /* SensitivityOverlayView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
 		1000001 /* EPZGameTurboApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPZGameTurboApp.swift; sourceTree = "<group>"; };
 		1000002 /* LicenseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseManager.swift; sourceTree = "<group>"; };
 		1000003 /* SuperTouchPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperTouchPrefs.swift; sourceTree = "<group>"; };
@@ -13,109 +26,120 @@
 		1000006 /* MainDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDashboardView.swift; sourceTree = "<group>"; };
 		1000007 /* FloatingOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingOverlayView.swift; sourceTree = "<group>"; };
 		1000008 /* SensitivityOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityOverlayView.swift; sourceTree = "<group>"; };
-
-		2000001 /* EPZGameTurboApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000001; };
-		2000002 /* LicenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000002; };
-		2000003 /* SuperTouchPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000003; };
-		2000004 /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000004; };
-		2000005 /* LicenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000005; };
-		2000006 /* MainDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000006; };
-		2000007 /* FloatingOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000007; };
-		2000008 /* SensitivityOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000008; };
-
+		1000009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3000001 /* EPZGameTurbo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EPZGameTurbo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
 		4000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
-			files = ();
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-
-		5000001 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				2000001,
-				2000002,
-				2000003,
-				2000004,
-				2000005,
-				2000006,
-				2000007,
-				2000008,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+/* End PBXFrameworksBuildPhase section */
 
-		6000001 /* EPZGameTurbo Group */ = {
+/* Begin PBXGroup section */
+		6000000 /* Main Root Group */ = {
 			isa = PBXGroup;
 			children = (
-				1000001,
-				1000002,
-				1000003,
-				1000004,
-				1000005,
-				1000006,
-				1000007,
-				1000008,
+				6000001 /* EPZGameTurbo */,
+				6000002 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6000001 /* EPZGameTurbo */ = {
+			isa = PBXGroup;
+			children = (
+				1000001 /* EPZGameTurboApp.swift */,
+				1000002 /* LicenseManager.swift */,
+				1000003 /* SuperTouchPrefs.swift */,
+				1000004 /* SystemMonitor.swift */,
+				1000005 /* LicenseView.swift */,
+				1000006 /* MainDashboardView.swift */,
+				1000007 /* FloatingOverlayView.swift */,
+				1000008 /* SensitivityOverlayView.swift */,
+				1000009 /* Info.plist */,
 			);
 			path = EPZGameTurbo;
 			sourceTree = "<group>";
 		};
-
-		6000002 /* Products Group */ = {
+		6000002 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3000001,
+				3000001 /* EPZGameTurbo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
+/* End PBXGroup section */
 
-		6000000 /* Main Root Group */ = {
-			isa = PBXGroup;
-			children = (
-				6000001,
-				6000002,
-			);
-			sourceTree = "<group>";
-		};
-
-		7000001 /* Native Target */ = {
+/* Begin PBXNativeTarget section */
+		7000001 /* EPZGameTurbo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9000001;
+			buildConfigurationList = 9000001 /* Build configuration list for PBXNativeTarget "EPZGameTurbo" */;
 			buildPhases = (
-				5000001,
-				4000001,
+				5000001 /* Sources */,
+				4000001 /* Frameworks */,
 			);
-			buildRules = ();
-			dependencies = ();
+			buildRules = (
+			);
+			dependencies = (
+			);
 			name = EPZGameTurbo;
 			productName = EPZGameTurbo;
-			productReference = 3000001;
+			productReference = 3000001 /* EPZGameTurbo.app */;
 			productType = "com.apple.product-type.application";
 		};
+/* End PBXNativeTarget section */
 
+/* Begin PBXProject section */
 		8000001 /* Project Object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1400;
-				LastUpgradeCheck = 1400;
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
 			};
-			buildConfigurationList = 9000002;
-			compatibilityVersion = "Xcode 13.0";
+			buildConfigurationList = 9000002 /* Build configuration list for PBXProject "EPZGameTurbo" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
-			knownRegions = (en, Base);
-			mainGroup = 6000000;
-			productRefGroup = 6000002;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6000000 /* Main Root Group */;
+			productRefGroup = 6000002 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			targets = (7000001);
+			targets = (
+				7000001 /* EPZGameTurbo */,
+			);
 		};
+/* End PBXProject section */
 
-		9000003 /* Target Debug */ = {
+/* Begin PBXSourcesBuildPhase section */
+		5000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2000001 /* EPZGameTurboApp.swift in Sources */,
+				2000002 /* LicenseManager.swift in Sources */,
+				2000003 /* SuperTouchPrefs.swift in Sources */,
+				2000004 /* SystemMonitor.swift in Sources */,
+				2000005 /* LicenseView.swift in Sources */,
+				2000006 /* MainDashboardView.swift in Sources */,
+				2000007 /* FloatingOverlayView.swift in Sources */,
+				2000008 /* SensitivityOverlayView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9000003 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -123,18 +147,18 @@
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "";
-				GENERATE_INFOPLIST_FILE = YES;
+				AD_HOC_CODE_SIGNING_ALLOWED = YES;
+				INFOPLIST_FILE = EPZGameTurbo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.epz.gameturbo.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = iphonesimulator;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-
-		9000004 /* Target Release */ = {
+		9000004 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -142,18 +166,18 @@
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "";
-				GENERATE_INFOPLIST_FILE = YES;
+				AD_HOC_CODE_SIGNING_ALLOWED = YES;
+				INFOPLIST_FILE = EPZGameTurbo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.epz.gameturbo.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = iphonesimulator;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-
-		9000005 /* Project Debug */ = {
+		9000005 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -161,12 +185,12 @@
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "";
-				SDKROOT = iphoneos;
+				AD_HOC_CODE_SIGNING_ALLOWED = YES;
+				SDKROOT = iphonesimulator;
 			};
 			name = Debug;
 		};
-
-		9000006 /* Project Release */ = {
+		9000006 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -174,24 +198,33 @@
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "";
-				SDKROOT = iphoneos;
+				AD_HOC_CODE_SIGNING_ALLOWED = YES;
+				SDKROOT = iphonesimulator;
 			};
 			name = Release;
 		};
+/* End XCBuildConfiguration section */
 
-		9000001 /* Target Config List */ = {
+/* Begin XCConfigurationList section */
+		9000001 /* Build configuration list for PBXNativeTarget "EPZGameTurbo" */ = {
 			isa = XCConfigurationList;
-			buildConfigurations = (9000003, 9000004);
+			buildConfigurations = (
+				9000003 /* Debug */,
+				9000004 /* Release */,
+			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-
-		9000002 /* Project Config List */ = {
+		9000002 /* Build configuration list for PBXProject "EPZGameTurbo" */ = {
 			isa = XCConfigurationList;
-			buildConfigurations = (9000005, 9000006);
+			buildConfigurations = (
+				9000005 /* Debug */,
+				9000006 /* Release */,
+			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+/* End XCConfigurationList section */
 	};
-	rootObject = 8000001;
+	rootObject = 8000001 /* Project Object */;
 }

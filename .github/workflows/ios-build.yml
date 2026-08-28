@@ -13,63 +13,24 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Run Build Script with Full Diagnostics
+    - name: Build Unsigned App Package with Xcode
       run: |
-        python3 generate_xcodeproj.py
-        
-        echo "=== XCODEBUILD DIAGNOSTICS ==="
         xcodebuild -project EPZGameTurbo.xcodeproj \
                    -scheme EPZGameTurbo \
                    -sdk iphonesimulator \
+                   -configuration Release \
                    -derivedDataPath build/ \
                    CODE_SIGNING_ALLOWED=NO \
                    CODE_SIGNING_REQUIRED=NO \
                    CODE_SIGN_IDENTITY="" \
                    AD_HOC_CODE_SIGNING_ALLOWED=YES \
-                   build || true
+                   build
 
-        if [ -f build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app/EPZGameTurbo ]; then
-          echo "xcodebuild SUCCEEDED!"
-          mkdir -p build/Payload/EPZGameTurbo.app
-          cp -r build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app/* build/Payload/EPZGameTurbo.app/
-        else
-          echo "xcodebuild did not output binary. Trying swiftc direct build..."
-          mkdir -p build/Payload/EPZGameTurbo.app
-          SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
-          
-          swiftc -v -sdk "$SDK_PATH" \
-                 -target arm64-apple-ios15.0-simulator \
-                 -module-name EPZGameTurbo \
-                 -parse-as-library \
-                 EPZGameTurbo/EPZGameTurboApp.swift \
-                 EPZGameTurbo/LicenseManager.swift \
-                 EPZGameTurbo/SuperTouchPrefs.swift \
-                 EPZGameTurbo/SystemMonitor.swift \
-                 EPZGameTurbo/LicenseView.swift \
-                 EPZGameTurbo/MainDashboardView.swift \
-                 EPZGameTurbo/FloatingOverlayView.swift \
-                 EPZGameTurbo/SensitivityOverlayView.swift \
-                 -o build/Payload/EPZGameTurbo.app/EPZGameTurbo || true
-        fi
-
-        if [ ! -f build/Payload/EPZGameTurbo.app/Info.plist ]; then
-          cp EPZGameTurbo/Info.plist build/Payload/EPZGameTurbo.app/Info.plist
-        fi
-
-        chmod +x build/Payload/EPZGameTurbo.app/EPZGameTurbo || true
-        
-        echo "=== PACKAGING IPA ==="
-        python3 -c "
-import os, zipfile
-ipa_path = 'build/EPZGameTurbo-iOS.ipa'
-os.makedirs('build', exist_ok=True)
-with zipfile.ZipFile(ipa_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-    for root, dirs, files in os.walk('build/Payload'):
-        for file in files:
-            fp = os.path.join(root, file)
-            zipf.write(fp, os.path.relpath(fp, 'build'))
-print('IPA created at:', ipa_path, 'Size:', os.path.getsize(ipa_path))
-"
+    - name: Package into IPA Archive
+      run: |
+        mkdir -p build/Payload
+        cp -r build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app build/Payload/
+        cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
       uses: actions/upload-artifact@v4
