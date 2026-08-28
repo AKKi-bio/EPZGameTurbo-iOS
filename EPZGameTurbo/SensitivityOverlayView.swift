@@ -47,7 +47,8 @@ struct SensitivityOverlayView: View {
                             .foregroundColor(.gray)
                     }
                 }
-                .toggleStyle(SwitchToggleStyle(tint: .yellow))
+                .toggleStyle(SwitchToggleStyle())
+                .tint(.yellow)
                 .onChange(of: isSuperTouchEnabled) { newValue in
                     SuperTouchPrefs.isEnabled = newValue
                 }
