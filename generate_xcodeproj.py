@@ -15,6 +15,7 @@ pbxproj_content = """// !$*UTF8*$!
 		1000006 /* MainDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDashboardView.swift; sourceTree = "<group>"; };
 		1000007 /* FloatingOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingOverlayView.swift; sourceTree = "<group>"; };
 		1000008 /* SensitivityOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityOverlayView.swift; sourceTree = "<group>"; };
+		1000009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 
 		2000001 /* EPZGameTurboApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000001; };
 		2000002 /* LicenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1000002; };
@@ -61,6 +62,7 @@ pbxproj_content = """// !$*UTF8*$!
 				1000006,
 				1000007,
 				1000008,
+				1000009,
 			);
 			path = EPZGameTurbo;
 			sourceTree = "<group>";
