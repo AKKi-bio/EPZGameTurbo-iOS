@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "EPZ Game Turbo",
+    "slug": "epz-game-turbo-ios",
+    "version": "1.82.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.epz.gameturbo.ios",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.epz.gameturbo.android"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d0bd434d-d1d0-425d-ba20-23dea62465d0"
+      }
+    }
+  }
+}

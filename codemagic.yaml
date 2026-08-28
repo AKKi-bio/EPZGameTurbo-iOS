@@ -1,12 +1,20 @@
 workflows:
-  ios-build:
-    name: Build EPZ Game Turbo iOS IPA
+  expo-ios:
+    name: Build EPZ Game Turbo Expo iOS IPA
     max_build_duration: 30
     instance_type: mac_mini_m1
     scripts:
-      - name: Build Unsigned Physical iPhone App
+      - name: Install dependencies
         script: |
-          xcodebuild -project EPZGameTurbo.xcodeproj \
+          npm install
+      - name: Expo Prebuild for iOS
+        script: |
+          npx expo prebuild --platform ios --clean
+      - name: Build Physical iPhone App
+        script: |
+          cd ios
+          pod install
+          xcodebuild -workspace EPZGameTurbo.xcworkspace \
                      -scheme EPZGameTurbo \
                      -destination 'generic/platform=iOS' \
                      -configuration Release \
@@ -17,15 +25,15 @@ workflows:
                      AD_HOC_CODE_SIGNING_ALLOWED=YES \
                      build || true
 
-      - name: Package IPA File
+      - name: Package Physical Device IPA
         script: |
           mkdir -p Payload
-          APP_PATH=$(find build/ -name "*.app" | head -n 1)
-          echo "Found compiled app at: $APP_PATH"
+          APP_PATH=$(find ios/build/ -name "*.app" | head -n 1)
+          echo "Found Expo App at: $APP_PATH"
           if [ -n "$APP_PATH" ]; then
             cp -r "$APP_PATH" Payload/
           fi
-          zip -r EPZGameTurbo-iOS.ipa Payload
+          zip -r EPZGameTurbo-Expo-Device.ipa Payload
 
     artifacts:
       - "*.ipa"
