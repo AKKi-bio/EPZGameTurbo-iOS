@@ -13,9 +13,11 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Setup XcodeGen
+    - name: Download XcodeGen Direct Binary
       run: |
-        which xcodegen || brew install xcodegen
+        curl -sL https://github.com/yonaskolb/XcodeGen/releases/download/2.38.0/xcodegen.zip -o xcodegen.zip
+        unzip -q xcodegen.zip
+        sudo cp xcodegen/bin/xcodegen /usr/local/bin/
 
     - name: Generate Xcode Project
       run: xcodegen generate
@@ -30,7 +32,7 @@ jobs:
                    CODE_SIGNING_ALLOWED=NO \
                    CODE_SIGNING_REQUIRED=NO \
                    CODE_SIGN_IDENTITY="" \
-                   DEVELOPMENT_TEAM="" \
+                   AD_HOC_CODE_SIGNING_ALLOWED=YES \
                    build
 
     - name: Package into IPA Archive
