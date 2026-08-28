@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct MainDashboardView: View {
     @StateObject private var monitor = SystemMonitor()
