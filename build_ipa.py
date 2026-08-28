@@ -4,56 +4,34 @@ import subprocess
 import zipfile
 
 print("==========================================")
-print("  EPZ GAME TURBO REAL IPA BUILDER v3.0   ")
+print("  EPZ GAME TURBO REAL IPA BUILDER v4.0   ")
 print("==========================================")
 
-# Step 1: Create Directories
+# Step 1: Clean build dir
+subprocess.run(["rm", "-rf", "build", ".build"], check=False)
 os.makedirs("build/Payload/EPZGameTurbo.app", exist_ok=True)
 
-# Step 2: Get SDK Path
-sdk_path = subprocess.check_output(["xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode("utf-8").strip()
-print("Found SDK Path:", sdk_path)
+# Step 2: Build Executable Binary via SPM (swift build -c release)
+print("\n[1/4] Compiling Native Release Binary via Swift Package Manager...")
+spm_cmd = ["swift", "build", "-c", "release"]
+res = subprocess.run(spm_cmd, capture_output=True, text=True)
+print("--- STDOUT ---")
+print(res.stdout)
+print("--- STDERR ---")
+print(res.stderr)
 
-# Step 3: Compile Swift files
-swift_files = [
-    "EPZGameTurbo/EPZGameTurboApp.swift",
-    "EPZGameTurbo/LicenseManager.swift",
-    "EPZGameTurbo/SuperTouchPrefs.swift",
-    "EPZGameTurbo/SystemMonitor.swift",
-    "EPZGameTurbo/LicenseView.swift",
-    "EPZGameTurbo/MainDashboardView.swift",
-    "EPZGameTurbo/FloatingOverlayView.swift",
-    "EPZGameTurbo/SensitivityOverlayView.swift"
-]
+spm_binary = ".build/release/EPZGameTurbo"
+if res.returncode != 0 or not os.path.exists(spm_binary):
+    print("ERROR: SPM compilation failed with exit code", res.returncode)
+    sys.exit(res.returncode)
 
-swift_cmd = [
-    "swiftc",
-    "-sdk", sdk_path,
-    "-target", "arm64-apple-ios15.0-simulator",
-    "-module-name", "EPZGameTurbo",
-    "-parse-as-library",
-    "-framework", "SwiftUI",
-    "-framework", "UIKit",
-    "-framework", "Foundation",
-] + swift_files + [
-    "-o", "build/Payload/EPZGameTurbo.app/EPZGameTurbo"
-]
+print("\n[2/4] SPM Compilation Succeeded! Copying binary to app bundle...")
+app_binary = "build/Payload/EPZGameTurbo.app/EPZGameTurbo"
+subprocess.run(["cp", spm_binary, app_binary], check=True)
+os.chmod(app_binary, 0o755)
 
-print("Executing compile command:", " ".join(swift_cmd))
-s_res = subprocess.run(swift_cmd, capture_output=True, text=True)
-print("--- SWIFTC STDOUT ---")
-print(s_res.stdout)
-print("--- SWIFTC STDERR ---")
-print(s_res.stderr)
-
-exec_path = "build/Payload/EPZGameTurbo.app/EPZGameTurbo"
-if s_res.returncode != 0 or not os.path.exists(exec_path):
-    print("ERROR: swiftc compilation failed with code", s_res.returncode)
-    sys.exit(1)
-
-os.chmod(exec_path, 0o755)
-
-# Step 4: Ensure Info.plist exists
+# Step 3: Write Info.plist
+print("\n[3/4] Creating Info.plist...")
 info_plist_path = "build/Payload/EPZGameTurbo.app/Info.plist"
 with open(info_plist_path, "w", encoding="utf-8") as f:
     f.write("""<?xml version="1.0" encoding="UTF-8"?>
@@ -77,7 +55,8 @@ with open(info_plist_path, "w", encoding="utf-8") as f:
 </dict>
 </plist>""")
 
-# Step 5: Package into real IPA Archive
+# Step 4: Package into IPA Archive
+print("\n[4/4] Packaging Real IPA Archive...")
 ipa_path = "build/EPZGameTurbo-iOS.ipa"
 with zipfile.ZipFile(ipa_path, "w", zipfile.ZIP_DEFLATED) as zipf:
     for root, dirs, files in os.walk("build/Payload"):
