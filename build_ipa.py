@@ -4,7 +4,7 @@ import subprocess
 import zipfile
 
 print("==========================================")
-print("  EPZ GAME TURBO REAL IPA BUILDER v5.0   ")
+print("  EPZ GAME TURBO REAL IPA BUILDER v6.0   ")
 print("==========================================")
 
 # Step 1: Clean and Create Directories
@@ -15,9 +15,8 @@ os.makedirs("build/Payload/EPZGameTurbo.app", exist_ok=True)
 sdk_path = subprocess.check_output(["xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode("utf-8").strip()
 print("Found SDK Path:", sdk_path)
 
-# Step 3: Compile Swift files with main.swift
+# Step 3: Compile Swift files with @main & -parse-as-library
 swift_files = [
-    "EPZGameTurbo/main.swift",
     "EPZGameTurbo/EPZGameTurboApp.swift",
     "EPZGameTurbo/LicenseManager.swift",
     "EPZGameTurbo/SuperTouchPrefs.swift",
@@ -35,11 +34,15 @@ swift_cmd = [
     "-sdk", sdk_path,
     "-target", "arm64-apple-ios15.0-simulator",
     "-module-name", "EPZGameTurbo",
+    "-parse-as-library",
+    "-framework", "SwiftUI",
+    "-framework", "UIKit",
+    "-framework", "Foundation",
 ] + swift_files + [
     "-o", app_binary
 ]
 
-print("\n[1/4] Compiling Swift files into Native iOS Binary...")
+print("\n[1/4] Compiling Swift files into Native iOS Executable Binary...")
 print("Executing:", " ".join(swift_cmd))
 
 res = subprocess.run(swift_cmd, capture_output=True, text=True)
@@ -79,7 +82,7 @@ with open(info_plist_path, "w", encoding="utf-8") as f:
 </dict>
 </plist>""")
 
-# Step 5: Package into IPA Archive
+# Step 5: Package into real IPA Archive
 print("\n[3/4] Packaging Real IPA Archive...")
 ipa_path = "build/EPZGameTurbo-iOS.ipa"
 with zipfile.ZipFile(ipa_path, "w", zipfile.ZIP_DEFLATED) as zipf:
