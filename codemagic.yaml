@@ -10,6 +10,9 @@ workflows:
       - name: Expo Prebuild for iOS
         script: |
           npx expo prebuild --platform ios --clean
+      - name: Export JS Bundle
+        script: |
+          npx expo export --platform ios
       - name: Build Physical iPhone App
         script: |
           cd ios
