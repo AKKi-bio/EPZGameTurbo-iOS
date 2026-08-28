@@ -47,7 +47,7 @@
 				6000001 /* EPZGameTurbo */,
 				6000002 /* Products */,
 			);
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		6000001 /* EPZGameTurbo */ = {
 			isa = PBXGroup;
@@ -63,7 +63,7 @@
 				1000009 /* Info.plist */,
 			);
 			path = EPZGameTurbo;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		6000002 /* Products */ = {
 			isa = PBXGroup;
@@ -71,7 +71,7 @@
 				3000001 /* EPZGameTurbo.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -112,7 +112,7 @@
 			);
 			mainGroup = 6000000 /* Main Root Group */;
 			productRefGroup = 6000002 /* Products */;
-			projectDirPath = "";
+			projectDirPath = "..";
 			projectRoot = "";
 			targets = (
 				7000001 /* EPZGameTurbo */,
