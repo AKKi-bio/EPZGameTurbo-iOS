@@ -30,7 +30,9 @@ class SystemMonitor: ObservableObject {
         self.totalRamMB = Int(total / (1024 * 1024))
         self.freeRamMB = Int(Double(self.totalRamMB) * 0.42)
         
+        #if os(iOS)
         UIDevice.current.isBatteryMonitoringEnabled = true
+        #endif
         let state = ProcessInfo.processInfo.thermalState
         switch state {
         case .nominal:

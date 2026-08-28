@@ -38,8 +38,10 @@ struct LicenseView: View {
                                     .stroke(Color.red.opacity(0.6), lineWidth: 1)
                             )
                             .foregroundColor(.white)
+                            #if os(iOS)
                             .autocapitalization(.allCharacters)
                             .disableAutocorrection(true)
+                            #endif
                     }
                     .padding(.horizontal, 24)
                     

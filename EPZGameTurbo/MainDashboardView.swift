@@ -114,11 +114,13 @@ struct MainDashboardView: View {
     }
     
     private func launchGame() {
+        #if os(iOS)
         if let url = URL(string: "freefire://"), UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url)
         } else if let url = URL(string: "https://apps.apple.com/app/id1300146651") {
             UIApplication.shared.open(url)
         }
+        #endif
     }
 }
 
