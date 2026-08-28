@@ -4,15 +4,15 @@ import PackageDescription
 let package = Package(
     name: "EPZGameTurbo",
     platforms: [
-        .iOS(.v15)
+        .macOS(.v12)
     ],
     products: [
-        .library(
+        .executable(
             name: "EPZGameTurbo",
             targets: ["EPZGameTurbo"])
     ],
     targets: [
-        .target(
+        .executableTarget(
             name: "EPZGameTurbo",
             path: "EPZGameTurbo")
     ]
