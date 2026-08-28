@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    - name: Generate Xcode Project & Shared Scheme
+    - name: Generate Xcode Project & Info.plist
       run: python3 generate_xcodeproj.py
 
     - name: Build Unsigned iOS App Package

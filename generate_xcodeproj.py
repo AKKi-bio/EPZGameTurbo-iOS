@@ -125,7 +125,7 @@ pbxproj_content = """// !$*UTF8*$!
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "";
-				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EPZGameTurbo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.epz.gameturbo.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -144,7 +144,7 @@ pbxproj_content = """// !$*UTF8*$!
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "";
-				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EPZGameTurbo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.epz.gameturbo.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -279,9 +279,41 @@ xcscheme_content = """<?xml version="1.0" encoding="UTF-8"?>
 </Scheme>
 """
 
+info_plist_content = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.82.0</string>
+    <key>CFBundleVersion</key>
+    <string>99</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+</dict>
+</plist>
+"""
+
 os.makedirs("EPZGameTurbo.xcodeproj/xcshareddata/xcschemes", exist_ok=True)
+os.makedirs("EPZGameTurbo", exist_ok=True)
+
 with open("EPZGameTurbo.xcodeproj/project.pbxproj", "w", encoding="utf-8") as f:
     f.write(pbxproj_content)
 
 with open("EPZGameTurbo.xcodeproj/xcshareddata/xcschemes/EPZGameTurbo.xcscheme", "w", encoding="utf-8") as f:
     f.write(xcscheme_content)
+
+with open("EPZGameTurbo/Info.plist", "w", encoding="utf-8") as f:
+    f.write(info_plist_content)
