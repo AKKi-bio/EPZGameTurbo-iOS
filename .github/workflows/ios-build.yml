@@ -13,14 +13,10 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Download & Run XcodeGen
+    - name: Install XcodeGen & Generate Xcode Project
       run: |
-        curl -sL https://github.com/yonaskolb/XcodeGen/releases/download/2.38.0/xcodegen.zip -o xcodegen.zip
-        unzip -o -q xcodegen.zip
-        XCODEGEN_BIN=$(find . -name "xcodegen" -type f -perm +111 2>/dev/null || find . -name "xcodegen" -type f | head -n 1)
-        echo "Found XcodeGen at: $XCODEGEN_BIN"
-        chmod +x "$XCODEGEN_BIN"
-        "$XCODEGEN_BIN" generate
+        HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+        xcodegen generate
 
     - name: Build Unsigned App Package with Xcode
       run: |
