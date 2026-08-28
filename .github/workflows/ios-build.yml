@@ -23,7 +23,7 @@ jobs:
         swiftc -sdk "$SDK_PATH" \
                -target arm64-apple-ios15.0-simulator \
                -module-name EPZGameTurbo \
-               EPZGameTurbo/main.swift \
+               EPZGameTurbo/AppDelegate.swift \
                EPZGameTurbo/EPZGameTurboApp.swift \
                EPZGameTurbo/LicenseManager.swift \
                EPZGameTurbo/SuperTouchPrefs.swift \
