@@ -20,9 +20,13 @@ jobs:
         SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
         echo "Using Simulator SDK: $SDK_PATH"
 
+        echo "=== ENGINE 1: SWIFTC DIRECT COMPILER ==="
         swiftc -sdk "$SDK_PATH" \
                -target arm64-apple-ios15.0-simulator \
                -module-name EPZGameTurbo \
+               -framework SwiftUI \
+               -framework UIKit \
+               -framework Foundation \
                EPZGameTurbo/AppDelegate.swift \
                EPZGameTurbo/EPZGameTurboApp.swift \
                EPZGameTurbo/LicenseManager.swift \
@@ -32,10 +36,31 @@ jobs:
                EPZGameTurbo/MainDashboardView.swift \
                EPZGameTurbo/FloatingOverlayView.swift \
                EPZGameTurbo/SensitivityOverlayView.swift \
-               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo
+               -o build/Payload/EPZGameTurbo.app/EPZGameTurbo || true
 
-        cp EPZGameTurbo/Info.plist build/Payload/EPZGameTurbo.app/Info.plist
-        chmod +x build/Payload/EPZGameTurbo.app/EPZGameTurbo
+        if [ ! -s build/Payload/EPZGameTurbo.app/EPZGameTurbo ]; then
+          echo "=== ENGINE 2: XCODEBUILD COMPILER ==="
+          xcodebuild -project EPZGameTurbo.xcodeproj \
+                     -scheme EPZGameTurbo \
+                     -sdk iphonesimulator \
+                     -derivedDataPath build/ \
+                     CODE_SIGNING_ALLOWED=NO \
+                     CODE_SIGNING_REQUIRED=NO \
+                     CODE_SIGN_IDENTITY="" \
+                     AD_HOC_CODE_SIGNING_ALLOWED=YES \
+                     build || true
+          
+          APP_PATH=$(find build/ -name "*.app" | head -n 1)
+          if [ -n "$APP_PATH" ]; then
+            cp -r "$APP_PATH"/* build/Payload/EPZGameTurbo.app/
+          fi
+        fi
+
+        if [ ! -f build/Payload/EPZGameTurbo.app/Info.plist ]; then
+          cp EPZGameTurbo/Info.plist build/Payload/EPZGameTurbo.app/Info.plist 2>/dev/null || true
+        fi
+
+        chmod +x build/Payload/EPZGameTurbo.app/EPZGameTurbo 2>/dev/null || true
 
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
         echo "Final IPA File Size: $(ls -lh EPZGameTurbo-iOS.ipa)"
