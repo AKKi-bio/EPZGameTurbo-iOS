@@ -20,7 +20,7 @@ jobs:
       run: |
         xcodebuild -project EPZGameTurbo.xcodeproj \
                    -scheme EPZGameTurbo \
-                   -sdk iphoneos \
+                   -destination 'generic/platform=iOS' \
                    -configuration Release \
                    -derivedDataPath build/ \
                    CODE_SIGNING_ALLOWED=NO \
