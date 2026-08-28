@@ -1,13 +1,7 @@
 import UIKit
 import SwiftUI
 
-UIApplicationMain(
-    CommandLine.argc,
-    CommandLine.unsafeArgv,
-    nil,
-    NSStringFromClass(AppDelegate.self)
-)
-
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
