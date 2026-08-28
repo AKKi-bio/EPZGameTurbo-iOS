@@ -132,7 +132,7 @@ pbxproj_content = """// !$*UTF8*$!
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.epz.gameturbo.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = iphonesimulator;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -152,7 +152,7 @@ pbxproj_content = """// !$*UTF8*$!
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.epz.gameturbo.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = iphonesimulator;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -168,7 +168,7 @@ pbxproj_content = """// !$*UTF8*$!
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "";
 				AD_HOC_CODE_SIGNING_ALLOWED = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = iphonesimulator;
 			};
 			name = Debug;
 		};
@@ -182,7 +182,7 @@ pbxproj_content = """// !$*UTF8*$!
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "";
 				AD_HOC_CODE_SIGNING_ALLOWED = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = iphonesimulator;
 			};
 			name = Release;
 		};

@@ -16,11 +16,12 @@ jobs:
     - name: Generate Xcode Project File & Scheme
       run: python3 generate_xcodeproj.py
 
-    - name: Build Unsigned iOS App Package
+    - name: Build Unsigned App Package
       run: |
         xcodebuild -project EPZGameTurbo.xcodeproj \
                    -scheme EPZGameTurbo \
-                   -destination 'generic/platform=iOS' \
+                   -sdk iphonesimulator \
+                   -destination 'generic/platform=iOS Simulator' \
                    -configuration Release \
                    -derivedDataPath build/ \
                    CODE_SIGNING_ALLOWED=NO \
@@ -32,7 +33,7 @@ jobs:
     - name: Package into IPA Archive
       run: |
         mkdir -p build/Payload
-        cp -r build/Build/Products/Release-iphoneos/*.app build/Payload/
+        cp -r build/Build/Products/Release-iphonesimulator/*.app build/Payload/
         cd build && zip -r EPZGameTurbo-iOS.ipa Payload
 
     - name: Upload Built IPA Artifact
