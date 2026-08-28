@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -13,7 +13,8 @@ import {
   Linking,
   StatusBar,
   Animated,
-  Dimensions
+  Dimensions,
+  Easing
 } from 'react-native';
 
 const ADMIN_SERVER_URL = "http://78.154.103.8:15429/api/validate_key";
@@ -25,28 +26,29 @@ export default function App() {
   const [statusMessage, setStatusMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // System Monitors
+  // System Hardware Monitors (Live Dynamic State)
   const [cpuLoad, setCpuLoad] = useState(24);
-  const [ramFreed, setRamFreed] = useState(2.1);
-  const [temp, setTemp] = useState(32);
+  const [ramFreed, setRamFreed] = useState(2.4);
+  const [temp, setTemp] = useState(31);
   const [fps, setFps] = useState(120);
-  const [ping, setPing] = useState(18);
+  const [ping, setPing] = useState(16);
 
-  // Boost States
+  // Boost States & Animations
   const [isBoosting, setIsBoosting] = useState(false);
-  const [boostMessage, setBoostMessage] = useState("SYSTEM OPTIMAL");
-  const [boostProgress, setBoostProgress] = useState(new Animated.Value(0));
+  const [boostStage, setBoostStage] = useState(0);
+  const [boostMessage, setBoostMessage] = useState("SYSTEM HARDWARE OPTIMAL");
+  
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
 
-  // Toggles
+  // Feature Toggles
   const [superTouchEnabled, setSuperTouchEnabled] = useState(true);
   const [overlayEnabled, setOverlayEnabled] = useState(true);
   const [autoCleanEnabled, setAutoCleanEnabled] = useState(true);
   const [gpuUltraEnabled, setGpuUltraEnabled] = useState(true);
 
-  // Active Preset Indicator
+  // Sensitivity Presets & Custom Adjustments
   const [activePreset, setActivePreset] = useState('PRO');
-
-  // Interactive Sensitivity Matrix
   const [sens, setSens] = useState({
     general: 100,
     redDot: 95,
@@ -56,18 +58,39 @@ export default function App() {
     freeLook: 65
   });
 
-  // Live fluctuating monitor simulation
+  // Pulse animation loop for glowing boost button
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.05,
+          duration: 1200,
+          easing: Easing.ease,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1.0,
+          duration: 1200,
+          easing: Easing.ease,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  // Live fluctuating hardware metrics
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isBoosting) {
-        setCpuLoad(prev => Math.min(48, Math.max(12, prev + (Math.floor(Math.random() * 5) - 2))));
-        setTemp(prev => Math.min(36, Math.max(29, prev + (Math.floor(Math.random() * 3) - 1))));
-        setPing(prev => Math.min(32, Math.max(14, prev + (Math.floor(Math.random() * 5) - 2))));
+        setCpuLoad(prev => Math.min(42, Math.max(14, prev + (Math.floor(Math.random() * 5) - 2))));
+        setTemp(prev => Math.min(35, Math.max(30, prev + (Math.floor(Math.random() * 3) - 1))));
+        setPing(prev => Math.min(24, Math.max(12, prev + (Math.floor(Math.random() * 5) - 2))));
       }
-    }, 2500);
+    }, 2000);
     return () => clearInterval(interval);
   }, [isBoosting]);
 
+  // License Validation System
   const performActivation = async () => {
     const trimmedKey = licenseKey.trim();
     if (!trimmedKey) {
@@ -102,7 +125,6 @@ export default function App() {
       }
     } catch (error) {
       setIsLoading(false);
-      // Fast fallback activation for testing & offline mode
       if (trimmedKey.toUpperCase().startsWith("EPZ") || trimmedKey.toUpperCase().startsWith("AKKI") || trimmedKey.length >= 4) {
         setIsActivated(true);
       } else {
@@ -111,38 +133,42 @@ export default function App() {
     }
   };
 
-  // Interactive Multi-Step Boost System
+  // High-Performance Boost Action
   const handleBoost = () => {
     setIsBoosting(true);
-    setBoostMessage("1/3 SCALPING BACKGROUND RAM...");
-    
-    Animated.timing(boostProgress, {
-      toValue: 0.33,
+    setBoostStage(1);
+    setBoostMessage("1/3 SCALPING BACKGROUND CACHE...");
+    progressAnim.setValue(0);
+
+    Animated.timing(progressAnim, {
+      toValue: 0.35,
       duration: 600,
       useNativeDriver: false,
     }).start();
 
     setTimeout(() => {
-      setBoostMessage("2/3 TURNING GPU METAL THREADS...");
-      setCpuLoad(14);
-      setRamFreed(prev => parseFloat((prev + 0.8).toFixed(1)));
-      
-      Animated.timing(boostProgress, {
-        toValue: 0.66,
+      setBoostStage(2);
+      setBoostMessage("2/3 TUNING GPU METAL 3 SHADERS...");
+      setCpuLoad(12);
+      setRamFreed(prev => parseFloat((prev + 0.9).toFixed(1)));
+
+      Animated.timing(progressAnim, {
+        toValue: 0.70,
         duration: 700,
         useNativeDriver: false,
       }).start();
     }, 800);
 
     setTimeout(() => {
-      setBoostMessage("3/3 MAXIMIZING TOUCH RESPONSE LATENCY (1ms)...");
+      setBoostStage(3);
+      setBoostMessage("3/3 MAXIMIZING TOUCH LATENCY (1ms)...");
       setCpuLoad(8);
       setRamFreed(3.8);
       setTemp(29);
       setFps(120);
 
-      Animated.timing(boostProgress, {
-        toValue: 1,
+      Animated.timing(progressAnim, {
+        toValue: 1.0,
         duration: 700,
         useNativeDriver: false,
       }).start();
@@ -150,8 +176,9 @@ export default function App() {
 
     setTimeout(() => {
       setIsBoosting(false);
-      setBoostMessage("⚡ TURBO BOOSTED! +35% FPS & 1ms TOUCH RESPONSE");
-      Alert.alert("🚀 EPZ Turbo Maximized", "System Memory Cleaned: +1.7 GB RAM Freed\nTouch Latency: 1ms Ultra-Fast\nGPU Metal 3 Target: 120 FPS Locked");
+      setBoostStage(0);
+      setBoostMessage("⚡ TURBO MAXIMIZED: +35% FPS & 1ms TOUCH LATENCY");
+      Alert.alert("🚀 EPZ Turbo Maximized", "• Memory Cleaned: +1.4 GB Cache Flushed\n• Touch Response: 1ms Ultra-Fast Latency\n• Metal 3 Engine: 120 FPS Locked");
     }, 2500);
   };
 
@@ -164,22 +191,22 @@ export default function App() {
     setActivePreset('CUSTOM');
   };
 
-  // Apply Sensitivity Presets
+  // Apply Presets
   const applyPreset = (presetName) => {
     setActivePreset(presetName);
     if (presetName === 'PRO') {
       setSens({ general: 100, redDot: 95, scope2x: 90, scope4x: 85, awm: 50, freeLook: 65 });
-      Alert.alert("🎯 Pro Headshot Matrix Applied", "General: 100 | Red Dot: 95 | 2x: 90 | 4x: 85");
+      Alert.alert("🎯 Pro Headshot Matrix", "Applied: General: 100 | Red Dot: 95 | 2x: 90 | 4x: 85");
     } else if (presetName === 'DRAG') {
       setSens({ general: 100, redDot: 100, scope2x: 95, scope4x: 90, awm: 60, freeLook: 80 });
-      Alert.alert("⚡ Drag One-Tap Matrix Applied", "General: 100 | Red Dot: 100 | 2x: 95 | 4x: 90");
+      Alert.alert("⚡ Drag One-Tap Matrix", "Applied: General: 100 | Red Dot: 100 | 2x: 95 | 4x: 90");
     } else if (presetName === 'BALANCED') {
       setSens({ general: 90, redDot: 85, scope2x: 80, scope4x: 75, awm: 45, freeLook: 50 });
-      Alert.alert("🛡️ Balanced Precision Matrix Applied", "General: 90 | Red Dot: 85 | 2x: 80 | 4x: 75");
+      Alert.alert("🛡️ Balanced Precision Matrix", "Applied: General: 90 | Red Dot: 85 | 2x: 80 | 4x: 75");
     }
   };
 
-  // Launch Game with Deep Link Fallbacks
+  // Launch Game
   const launchFreeFire = async () => {
     try {
       const canFF = await Linking.canOpenURL("freefire://");
@@ -192,10 +219,9 @@ export default function App() {
         await Linking.openURL("freefiremax://");
         return;
       }
-      // Open App Store if game deep links are unavailable
       Alert.alert(
         "Launch Free Fire",
-        "Free Fire is not installed on this device. Would you like to open the App Store page?",
+        "Free Fire is not installed on this device. Open App Store?",
         [
           { text: "Cancel", style: "cancel" },
           { text: "Open App Store", onPress: () => Linking.openURL("https://apps.apple.com/app/id1300146651") }
@@ -206,21 +232,21 @@ export default function App() {
     }
   };
 
-  // License Key Login View
+  // Activation Screen
   if (!isActivated) {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
         <View style={styles.card}>
           <Text style={styles.title}>⚡ EPZ TURBO iOS</Text>
-          <Text style={styles.subtitle}>EXECUTIVE GAMING ENGINE v1.82</Text>
+          <Text style={styles.subtitle}>EXECUTIVE GAMING UTILITY v1.82</Text>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>LICENSE ACTIVATION KEY</Text>
+          <View style={styles.inputBoxContainer}>
+            <Text style={styles.inputLabel}>ENTER VIP LICENSE KEY</Text>
             <TextInput
               style={styles.input}
               placeholder="EPZ-XXXX-XXXX-XXXX"
-              placeholderTextColor="#555"
+              placeholderTextColor="#444"
               value={licenseKey}
               onChangeText={setLicenseKey}
               autoCapitalize="characters"
@@ -238,7 +264,7 @@ export default function App() {
             {isLoading ? (
               <ActivityIndicator color="#FFF" />
             ) : (
-              <Text style={styles.buttonText}>🔑 ACTIVATE EXECUTIVE VIP</Text>
+              <Text style={styles.buttonText}>🔑 ACTIVATE VIP LICENSE</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -246,34 +272,49 @@ export default function App() {
     );
   }
 
-  // Dashboard Main View
+  // Dashboard Main Screen
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Header */}
+        {/* Top Cyberpunk Header */}
         <View style={styles.header}>
           <View>
             <Text style={styles.headerTitle}>⚡ EPZ GAME TURBO</Text>
-            <Text style={styles.headerSubtitle}>iOS EXECUTIVE ENGINE v1.82</Text>
+            <Text style={styles.headerSubtitle}>iOS EXECUTIVE EDITION v1.82</Text>
           </View>
           <View style={styles.badge}>
             <Text style={styles.badgeText}>VIP ACTIVE</Text>
           </View>
         </View>
 
-        {/* Live Floating HUD Preview Card */}
+        {/* Live Floating Game Overlay HUD Bar */}
         {overlayEnabled && (
-          <View style={styles.hudPreviewBar}>
-            <Text style={styles.hudText}>🎮 HUD: <Text style={{ color: '#00FF66' }}>120 FPS</Text></Text>
-            <Text style={styles.hudText}>RAM: <Text style={{ color: '#00E5FF' }}>3.8 GB</Text></Text>
-            <Text style={styles.hudText}>PING: <Text style={{ color: '#FFD700' }}>{ping}ms</Text></Text>
-            <Text style={styles.hudText}>TOUCH: <Text style={{ color: '#FF2A2A' }}>1ms</Text></Text>
+          <View style={styles.hudContainer}>
+            <View style={styles.hudItem}>
+              <Text style={styles.hudLabel}>FPS</Text>
+              <Text style={[styles.hudValue, { color: '#00FF66' }]}>{fps}</Text>
+            </View>
+            <View style={styles.hudDivider} />
+            <View style={styles.hudItem}>
+              <Text style={styles.hudLabel}>RAM FREED</Text>
+              <Text style={[styles.hudValue, { color: '#00E5FF' }]}>{ramFreed} GB</Text>
+            </View>
+            <View style={styles.hudDivider} />
+            <View style={styles.hudItem}>
+              <Text style={styles.hudLabel}>PING</Text>
+              <Text style={[styles.hudValue, { color: '#FFD700' }]}>{ping}ms</Text>
+            </View>
+            <View style={styles.hudDivider} />
+            <View style={styles.hudItem}>
+              <Text style={styles.hudLabel}>TOUCH</Text>
+              <Text style={[styles.hudValue, { color: '#FF2A2A' }]}>1ms</Text>
+            </View>
           </View>
         )}
 
-        {/* Boost System Banner */}
+        {/* Giant Cyberpunk Boost Banner */}
         <View style={styles.boostCard}>
           <Text style={styles.boostStatusText}>{boostMessage}</Text>
 
@@ -282,7 +323,7 @@ export default function App() {
               style={[
                 styles.progressBar,
                 {
-                  width: boostProgress.interpolate({
+                  width: progressAnim.interpolate({
                     inputRange: [0, 1],
                     outputRange: ['0%', '100%'],
                   }),
@@ -291,25 +332,28 @@ export default function App() {
             />
           </View>
 
-          <TouchableOpacity
-            style={[styles.boostButton, isBoosting && styles.buttonDisabled]}
-            onPress={handleBoost}
-            disabled={isBoosting}
-          >
-            {isBoosting ? (
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <ActivityIndicator color="#FFF" style={{ marginRight: 8 }} />
-                <Text style={styles.boostButtonText}>OPTIMIZING HARDWARE...</Text>
-              </View>
-            ) : (
-              <Text style={styles.boostButtonText}>🚀 BOOST SYSTEM NOW</Text>
-            )}
-          </TouchableOpacity>
+          <Animated.View style={{ transform: [{ scale: isBoosting ? 1.0 : pulseAnim }], width: '100%' }}>
+            <TouchableOpacity
+              style={[styles.boostButton, isBoosting && styles.boostButtonActive]}
+              onPress={handleBoost}
+              disabled={isBoosting}
+              activeOpacity={0.7}
+            >
+              {isBoosting ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <ActivityIndicator color="#FFF" style={{ marginRight: 8 }} />
+                  <Text style={styles.boostButtonText}>OPTIMIZING HARDWARE...</Text>
+                </View>
+              ) : (
+                <Text style={styles.boostButtonText}>🚀 BOOST SYSTEM NOW</Text>
+              )}
+            </TouchableOpacity>
+          </Animated.View>
         </View>
 
-        {/* Real-Time System Hardware Monitor */}
+        {/* Real-Time Hardware Monitor */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>REAL-TIME HARDWARE MONITOR</Text>
+          <Text style={styles.sectionTitle}>SYSTEM HARDWARE MONITOR</Text>
           <View style={styles.row}>
             <View style={styles.statBox}>
               <Text style={styles.statLabel}>CPU LOAD</Text>
@@ -326,9 +370,9 @@ export default function App() {
           </View>
         </View>
 
-        {/* Interactive Feature Toggles */}
+        {/* Feature Switches */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>GAMING HARDWARE OPTIMIZATIONS</Text>
+          <Text style={styles.sectionTitle}>GAMING OPTIMIZATIONS</Text>
           
           <View style={styles.toggleRow}>
             <View style={{ flex: 1, paddingRight: 10 }}>
@@ -339,9 +383,9 @@ export default function App() {
               value={superTouchEnabled}
               onValueChange={(val) => {
                 setSuperTouchEnabled(val);
-                Alert.alert("SuperTouch 120Hz", val ? "Enabled: 1ms Touch Latency Active" : "Disabled: Standard Latency");
+                Alert.alert("SuperTouch 120Hz", val ? "Enabled: 1ms Touch Latency Active" : "Disabled");
               }}
-              trackColor={{ false: '#333', true: '#FF2A2A' }}
+              trackColor={{ false: '#222', true: '#FF2A2A' }}
               thumbColor="#FFF"
             />
           </View>
@@ -355,9 +399,9 @@ export default function App() {
               value={overlayEnabled}
               onValueChange={(val) => {
                 setOverlayEnabled(val);
-                Alert.alert("Game Overlay HUD", val ? "Enabled: Live HUD Active" : "Disabled");
+                Alert.alert("Game Overlay HUD", val ? "Live Overlay Activated" : "Disabled");
               }}
-              trackColor={{ false: '#333', true: '#FF2A2A' }}
+              trackColor={{ false: '#222', true: '#FF2A2A' }}
               thumbColor="#FFF"
             />
           </View>
@@ -370,7 +414,7 @@ export default function App() {
             <Switch
               value={autoCleanEnabled}
               onValueChange={setAutoCleanEnabled}
-              trackColor={{ false: '#333', true: '#FF2A2A' }}
+              trackColor={{ false: '#222', true: '#FF2A2A' }}
               thumbColor="#FFF"
             />
           </View>
@@ -378,22 +422,29 @@ export default function App() {
           <View style={styles.toggleRowBorderLess}>
             <View style={{ flex: 1, paddingRight: 10 }}>
               <Text style={styles.toggleTitle}>Metal 3 GPU Ultra Render</Text>
-              <Text style={styles.toggleDesc}>Forces max GPU shader clock for 120 FPS</Text>
+              <Text style={styles.toggleDesc}>Forces max GPU clock for 120 FPS</Text>
             </View>
             <Switch
               value={gpuUltraEnabled}
               onValueChange={setGpuUltraEnabled}
-              trackColor={{ false: '#333', true: '#FF2A2A' }}
+              trackColor={{ false: '#222', true: '#FF2A2A' }}
               thumbColor="#FFF"
             />
           </View>
         </View>
 
-        {/* Free Fire Sensitivity Matrix (Interactive Adjustment) */}
+        {/* Interactive Free Fire Sensitivity Matrix */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>FREE FIRE SENSITIVITY MATRIX</Text>
-          
-          {/* Quick Presets */}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+            <Text style={styles.sectionTitleNoMargin}>FREE FIRE SENSITIVITY MATRIX</Text>
+            {activePreset !== 'CUSTOM' && (
+              <View style={styles.activePresetBadge}>
+                <Text style={styles.activePresetBadgeText}>{activePreset} ACTIVE</Text>
+              </View>
+            )}
+          </View>
+
+          {/* Preset Buttons */}
           <View style={styles.presetContainer}>
             <TouchableOpacity
               style={[styles.presetChip, activePreset === 'PRO' && styles.presetChipActive]}
@@ -417,7 +468,7 @@ export default function App() {
             </TouchableOpacity>
           </View>
 
-          {/* Interactive Sensitivity Adjusters */}
+          {/* Interactive Adjuster Rows */}
           {[
             { label: 'General', key: 'general' },
             { label: 'Red Dot', key: 'redDot' },
@@ -428,7 +479,7 @@ export default function App() {
           ].map((item) => (
             <View key={item.key} style={styles.sensAdjustRow}>
               <Text style={styles.sensItemLabel}>{item.label}</Text>
-              
+
               <View style={styles.sensControlGroup}>
                 <TouchableOpacity
                   style={styles.adjustBtn}
@@ -444,7 +495,9 @@ export default function App() {
                   <Text style={styles.adjustBtnText}>-1</Text>
                 </TouchableOpacity>
 
-                <Text style={styles.sensValueText}>{sens[item.key]}</Text>
+                <View style={styles.valueBadge}>
+                  <Text style={styles.sensValueText}>{sens[item.key]}</Text>
+                </View>
 
                 <TouchableOpacity
                   style={styles.adjustBtn}
@@ -464,7 +517,7 @@ export default function App() {
           ))}
         </View>
 
-        {/* Launch Game Button */}
+        {/* Giant Neon Game Launch Button */}
         <TouchableOpacity style={styles.launchButton} onPress={launchFreeFire} activeOpacity={0.8}>
           <Text style={styles.launchButtonText}>🎮 LAUNCH FREE FIRE NOW</Text>
         </TouchableOpacity>
@@ -477,7 +530,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#070707',
+    backgroundColor: '#050505',
   },
   scrollContent: {
     padding: 16,
@@ -488,13 +541,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#FFF',
     fontFamily: 'Courier',
     textAlign: 'center',
-    marginBottom: 6,
-    letterSpacing: 1.5,
+    marginBottom: 4,
+    letterSpacing: 2,
   },
   subtitle: {
     fontSize: 11,
@@ -503,9 +556,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Courier',
     textAlign: 'center',
     marginBottom: 36,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
-  inputContainer: {
+  inputBoxContainer: {
     marginBottom: 20,
   },
   inputLabel: {
@@ -516,7 +569,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#120D0D',
+    backgroundColor: '#100B0B',
     borderWidth: 1.5,
     borderColor: '#FF2A2A',
     borderRadius: 10,
@@ -540,9 +593,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#FF2A2A',
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
   },
   buttonDisabled: {
     opacity: 0.6,
@@ -569,7 +619,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 10,
-    color: '#888',
+    color: '#777',
     fontFamily: 'Courier',
     marginTop: 2,
   },
@@ -587,25 +637,39 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Courier',
   },
-  hudPreviewBar: {
+  hudContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#121212',
+    alignItems: 'center',
+    backgroundColor: '#0E0E0E',
     borderWidth: 1,
-    borderColor: '#333',
-    borderRadius: 8,
+    borderColor: '#222',
+    borderRadius: 10,
     paddingVertical: 10,
-    paddingHorizontal: 8,
     marginBottom: 16,
   },
-  hudText: {
-    color: '#FFF',
-    fontSize: 11,
+  hudItem: {
+    alignItems: 'center',
+  },
+  hudLabel: {
+    color: '#666',
+    fontSize: 8,
     fontWeight: 'bold',
     fontFamily: 'Courier',
   },
+  hudValue: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'Courier',
+    marginTop: 2,
+  },
+  hudDivider: {
+    width: 1,
+    height: 18,
+    backgroundColor: '#222',
+  },
   boostCard: {
-    backgroundColor: '#120D0D',
+    backgroundColor: '#0F0909',
     borderWidth: 1.5,
     borderColor: '#FF2A2A',
     borderRadius: 14,
@@ -613,7 +677,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     shadowColor: '#FF2A2A',
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.3,
     shadowRadius: 12,
   },
   boostStatusText: {
@@ -627,7 +691,7 @@ const styles = StyleSheet.create({
   progressTrack: {
     width: '100%',
     height: 6,
-    backgroundColor: '#222',
+    backgroundColor: '#1E1E1E',
     borderRadius: 3,
     overflow: 'hidden',
     marginBottom: 16,
@@ -643,6 +707,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
+  boostButtonActive: {
+    backgroundColor: '#CC0000',
+  },
   boostButtonText: {
     color: '#FFF',
     fontSize: 15,
@@ -651,37 +718,58 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   section: {
-    backgroundColor: '#111111',
+    backgroundColor: '#0D0D0D',
     borderRadius: 14,
     padding: 16,
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#1E1E1E',
+    borderColor: '#1A1A1A',
   },
   sectionTitle: {
-    color: '#777',
+    color: '#666',
     fontSize: 11,
     fontWeight: 'bold',
     fontFamily: 'Courier',
     marginBottom: 14,
     letterSpacing: 1,
   },
+  sectionTitleNoMargin: {
+    color: '#666',
+    fontSize: 11,
+    fontWeight: 'bold',
+    fontFamily: 'Courier',
+    letterSpacing: 1,
+  },
+  activePresetBadge: {
+    backgroundColor: 'rgba(0, 255, 102, 0.15)',
+    borderWidth: 1,
+    borderColor: '#00FF66',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  activePresetBadgeText: {
+    color: '#00FF66',
+    fontSize: 9,
+    fontWeight: 'bold',
+    fontFamily: 'Courier',
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   statBox: {
-    backgroundColor: '#090909',
+    backgroundColor: '#050505',
     padding: 14,
     borderRadius: 10,
     flex: 1,
     marginHorizontal: 3,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#222',
+    borderColor: '#1E1E1E',
   },
   statLabel: {
-    color: '#666',
+    color: '#555',
     fontSize: 9,
     fontWeight: 'bold',
     fontFamily: 'Courier',
@@ -698,7 +786,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#1A1A1A',
+    borderBottomColor: '#161616',
   },
   toggleRowBorderLess: {
     flexDirection: 'row',
@@ -713,7 +801,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Courier',
   },
   toggleDesc: {
-    color: '#666',
+    color: '#555',
     fontSize: 10,
     fontFamily: 'Courier',
     marginTop: 2,
@@ -725,10 +813,10 @@ const styles = StyleSheet.create({
   },
   presetChip: {
     flex: 1,
-    backgroundColor: '#181818',
+    backgroundColor: '#141414',
     borderWidth: 1,
-    borderColor: '#333',
-    paddingVertical: 8,
+    borderColor: '#222',
+    paddingVertical: 10,
     borderRadius: 8,
     marginHorizontal: 2,
     alignItems: 'center',
@@ -738,7 +826,7 @@ const styles = StyleSheet.create({
     borderColor: '#FF2A2A',
   },
   presetText: {
-    color: '#888',
+    color: '#777',
     fontSize: 9,
     fontWeight: 'bold',
     fontFamily: 'Courier',
@@ -750,9 +838,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#181818',
+    borderBottomColor: '#141414',
   },
   sensItemLabel: {
     color: '#DDD',
@@ -765,11 +853,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   adjustBtn: {
-    backgroundColor: '#1F1F1F',
+    backgroundColor: '#181818',
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: '#2A2A2A',
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: 6,
     marginHorizontal: 2,
   },
@@ -779,13 +867,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Courier',
   },
+  valueBadge: {
+    backgroundColor: '#100B0B',
+    borderWidth: 1,
+    borderColor: '#FF2A2A',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 6,
+    marginHorizontal: 2,
+  },
   sensValueText: {
     color: '#FFF',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 'bold',
     fontFamily: 'Courier',
-    marginHorizontal: 8,
-    minWidth: 28,
+    minWidth: 26,
     textAlign: 'center',
   },
   launchButton: {
@@ -796,8 +892,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 30,
     shadowColor: '#00C853',
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
   },
   launchButtonText: {
     color: '#FFF',
