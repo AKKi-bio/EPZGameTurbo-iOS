@@ -3,83 +3,94 @@ import sys
 import subprocess
 import zipfile
 
-print("Starting Build Process...")
+print("==========================================")
+print("  EPZ GAME TURBO REAL IPA BUILDER v2.0   ")
+print("==========================================")
 
-# Step 1: Create Directories
-os.makedirs("build/Payload/EPZGameTurbo.app", exist_ok=True)
+# Step 1: Generate Xcode Project File & Scheme
+print("\n[1/5] Generating Xcode Project & Scheme...")
+subprocess.run([sys.executable, "generate_xcodeproj.py"], check=True)
 
-# Step 2: Get SDK Path
-try:
+# Step 2: Clean old build dir
+subprocess.run(["rm", "-rf", "build"], check=False)
+os.makedirs("build/Payload", exist_ok=True)
+
+# Step 3: Run XcodeBuild for iphonesimulator
+print("\n[2/5] Running xcodebuild for iphonesimulator...")
+xc_cmd = [
+    "xcodebuild",
+    "-project", "EPZGameTurbo.xcodeproj",
+    "-scheme", "EPZGameTurbo",
+    "-sdk", "iphonesimulator",
+    "-configuration", "Release",
+    "-derivedDataPath", "build/",
+    "CODE_SIGNING_ALLOWED=NO",
+    "CODE_SIGNING_REQUIRED=NO",
+    "CODE_SIGN_IDENTITY=",
+    "AD_HOC_CODE_SIGNING_ALLOWED=YES",
+    "build"
+]
+
+res = subprocess.run(xc_cmd, capture_output=True, text=True)
+print("--- STDOUT ---")
+print(res.stdout[-3000:])
+print("--- STDERR ---")
+print(res.stderr)
+
+# Step 4: Check or run swiftc fallback
+app_binary = "build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app/EPZGameTurbo"
+
+if not os.path.exists(app_binary):
+    print("\n[3/5] xcodebuild binary missing! Attempting direct swiftc compilation...")
     sdk_path = subprocess.check_output(["xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode("utf-8").strip()
-    print("Found SDK Path:", sdk_path)
-except Exception as e:
-    print("Error getting SDK path:", e)
-    sdk_path = ""
+    
+    os.makedirs("build/Payload/EPZGameTurbo.app", exist_ok=True)
+    
+    swift_files = [
+        "EPZGameTurbo/EPZGameTurboApp.swift",
+        "EPZGameTurbo/LicenseManager.swift",
+        "EPZGameTurbo/SuperTouchPrefs.swift",
+        "EPZGameTurbo/SystemMonitor.swift",
+        "EPZGameTurbo/LicenseView.swift",
+        "EPZGameTurbo/MainDashboardView.swift",
+        "EPZGameTurbo/FloatingOverlayView.swift",
+        "EPZGameTurbo/SensitivityOverlayView.swift"
+    ]
+    
+    swift_cmd = [
+        "swiftc",
+        "-sdk", sdk_path,
+        "-target", "arm64-apple-ios15.0-simulator",
+        "-module-name", "EPZGameTurbo",
+        "-parse-as-library",
+        "-framework", "SwiftUI",
+        "-framework", "UIKit",
+        "-framework", "Foundation",
+    ] + swift_files + [
+        "-o", "build/Payload/EPZGameTurbo.app/EPZGameTurbo"
+    ]
+    
+    s_res = subprocess.run(swift_cmd, capture_output=True, text=True)
+    print("--- SWIFTC STDOUT ---")
+    print(s_res.stdout)
+    print("--- SWIFTC STDERR ---")
+    print(s_res.stderr)
+    
+    if s_res.returncode != 0:
+        print("ERROR: swiftc compilation failed with code", s_res.returncode)
+        sys.exit(s_res.returncode)
+else:
+    print("\n[3/5] xcodebuild succeeded! Copying app bundle...")
+    os.makedirs("build/Payload/EPZGameTurbo.app", exist_ok=True)
+    subprocess.run(["cp", "-r", "build/Build/Products/Release-iphonesimulator/EPZGameTurbo.app/", "build/Payload/EPZGameTurbo.app/"], check=True)
 
-# Step 3: Compile Swift files
-swift_files = [
-    "EPZGameTurbo/EPZGameTurboApp.swift",
-    "EPZGameTurbo/LicenseManager.swift",
-    "EPZGameTurbo/SuperTouchPrefs.swift",
-    "EPZGameTurbo/SystemMonitor.swift",
-    "EPZGameTurbo/LicenseView.swift",
-    "EPZGameTurbo/MainDashboardView.swift",
-    "EPZGameTurbo/FloatingOverlayView.swift",
-    "EPZGameTurbo/SensitivityOverlayView.swift"
-]
+# Step 5: Copy Info.plist if missing
+info_plist = "build/Payload/EPZGameTurbo.app/Info.plist"
+if not os.path.exists(info_plist):
+    subprocess.run(["cp", "EPZGameTurbo/Info.plist", info_plist], check=True)
 
-cmd = [
-    "swiftc",
-    "-sdk", sdk_path,
-    "-target", "arm64-apple-ios15.0-simulator",
-    "-module-name", "EPZGameTurbo",
-    "-parse-as-library",
-    "-framework", "SwiftUI",
-    "-framework", "UIKit",
-    "-framework", "Foundation",
-] + swift_files + [
-    "-o", "build/Payload/EPZGameTurbo.app/EPZGameTurbo"
-]
-
-print("Executing compile command:", " ".join(cmd))
-res = subprocess.run(cmd, capture_output=True, text=True)
-print("Compiler STDOUT:", res.stdout)
-print("Compiler STDERR:", res.stderr)
-
-exec_path = "build/Payload/EPZGameTurbo.app/EPZGameTurbo"
-if not os.path.exists(exec_path) or os.path.getsize(exec_path) == 0:
-    print("Executable compilation pending! Outputting binary placeholder...")
-    with open(exec_path, "wb") as f:
-        f.write(b"\x7fELF\x02\x01\x01\x00EPZGameTurboBinary")
-
-os.chmod(exec_path, 0o755)
-
-# Step 4: Ensure Info.plist exists
-info_plist_path = "build/Payload/EPZGameTurbo.app/Info.plist"
-if not os.path.exists(info_plist_path):
-    with open(info_plist_path, "w", encoding="utf-8") as f:
-        f.write("""<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>CFBundleExecutable</key>
-    <string>EPZGameTurbo</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.epz.gameturbo.ios</string>
-    <key>CFBundleName</key>
-    <string>EPZ Game Turbo</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.82.0</string>
-    <key>CFBundleVersion</key>
-    <string>99</string>
-    <key>LSRequiresIPhoneOS</key>
-    <true/>
-</dict>
-</plist>""")
-
-# Step 5: Package into IPA Archive
+# Step 6: Package into real IPA
+print("\n[4/5] Packaging real multi-megabyte IPA Archive...")
 ipa_path = "build/EPZGameTurbo-iOS.ipa"
 with zipfile.ZipFile(ipa_path, "w", zipfile.ZIP_DEFLATED) as zipf:
     for root, dirs, files in os.walk("build/Payload"):
@@ -88,5 +99,6 @@ with zipfile.ZipFile(ipa_path, "w", zipfile.ZIP_DEFLATED) as zipf:
             arcname = os.path.relpath(file_path, "build")
             zipf.write(file_path, arcname)
 
-print("Created IPA successfully at:", ipa_path)
+size_mb = os.path.getsize(ipa_path) / (1024 * 1024)
+print(f"\n[5/5] SUCCESS! Built real IPA size: {size_mb:.2f} MB at {ipa_path}")
 sys.exit(0)
