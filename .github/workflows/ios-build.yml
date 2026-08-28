@@ -16,8 +16,11 @@ jobs:
     - name: Download & Run XcodeGen
       run: |
         curl -sL https://github.com/yonaskolb/XcodeGen/releases/download/2.38.0/xcodegen.zip -o xcodegen.zip
-        unzip -q xcodegen.zip
-        ./xcodegen/bin/xcodegen generate
+        unzip -o -q xcodegen.zip
+        XCODEGEN_BIN=$(find . -name "xcodegen" -type f -perm +111 2>/dev/null || find . -name "xcodegen" -type f | head -n 1)
+        echo "Found XcodeGen at: $XCODEGEN_BIN"
+        chmod +x "$XCODEGEN_BIN"
+        "$XCODEGEN_BIN" generate
 
     - name: Build Unsigned App Package with Xcode
       run: |
