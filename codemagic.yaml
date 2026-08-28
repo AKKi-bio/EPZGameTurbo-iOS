@@ -15,16 +15,13 @@ workflows:
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGN_IDENTITY="" \
                      AD_HOC_CODE_SIGNING_ALLOWED=YES \
-                     build || true
+                     build
 
       - name: Package IPA File
         script: |
-          mkdir -p build/Payload
-          APP_PATH=$(find build/ -name "*.app" | head -n 1)
-          if [ -n "$APP_PATH" ]; then
-            cp -r "$APP_PATH" build/Payload/
-          fi
-          cd build && zip -r EPZGameTurbo-iOS.ipa Payload
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/EPZGameTurbo.app Payload/
+          zip -r EPZGameTurbo-iOS.ipa Payload
 
     artifacts:
-      - build/EPZGameTurbo-iOS.ipa
+      - "*.ipa"
