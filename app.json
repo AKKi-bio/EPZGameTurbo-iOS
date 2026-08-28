@@ -9,7 +9,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.epz.gameturbo.ios",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "LSApplicationQueriesSchemes": [
+          "freefire",
+          "freefiremax"
+        ]
       }
     },
     "android": {
